@@ -5,17 +5,13 @@ This repository contains pseudo-GT 3D pose data data produced by [Exemplar Fine-
 ![Teaser Image](docs/example1.jpg)
 ![Teaser Image](docs/example2.jpg)
 
-## Requirements
-- python3
-- numpy
-- opencv-python
-- PyTorch (1.4.0 or 1.5.0 but lower version would be still OK)
-- torchvision
-- PyOpenGL
-- smplx
-- [chumpy](https://github.com/mattloper/chumpy) (required to load SMPL model)
-- scipy
-- tqdm
+## Installing Requirements
+It is convenient and safe to use conda environement
+```
+conda create -n venv_eft python=3.6
+conda activate venv_eft
+pip install -r requirements.txt
+```
 
 ## Download EFT Fitting Results
 

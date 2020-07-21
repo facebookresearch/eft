@@ -1,0 +1,9 @@
+numpy
+opencv-python
+torch
+torchvision
+PyOpenGL
+smplx
+scipy
+tqdm
+git+https://github.com/mattloper/chumpy.git

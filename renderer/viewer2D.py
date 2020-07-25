@@ -29,7 +29,7 @@ def ImShow(inputImg, waitTime=1, bConvRGB2BGR=False,name='image', scale=1.0):
     cv2.imshow(name,inputImg)
 
     global veryFirstImShow
-    if veryFirstImShow:
+    if False:#veryFirstImShow:
         print(">> Press any key to move on")
         cv2.waitKey(0)      #the initial one is always blank... why?
         veryFirstImShow = 0

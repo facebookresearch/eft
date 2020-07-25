@@ -37,7 +37,9 @@ parser.add_argument('--smpl_dir',default="./extradata/smpl", type=str , help='Fo
 parser.add_argument('--onbbox',action="store_true", help="Show the 3D pose on bbox space")
 parser.add_argument('--rendermode',default="geo", help="Choose among geo, normal, densepose")
 parser.add_argument('--render_dir',default="render_eft", help="Folder to save rendered images")
-parser.add_argument('--bShowMultiSub',action="store_true", help='If True, show multi-person outputs at each time. Default, visualize a single person at each time')
+parser.add_argument('--waitforkeys',action="store_true", help="If true, it will pasue after each visualizing each sample, waiting for any key pressed")
+parser.add_argument('--turntable',action="store_true", help="If true, show turn table views")
+parser.add_argument('--multi',action="store_true", help='If True, show all available fitting people per image. Default, visualize a single person at each time')
 args = parser.parse_args()
 
 def getRenderer(ren_type='geo'):
@@ -81,17 +83,22 @@ def conv_3djoint_2djoint(smpl_joints_3d_vis, imgshape):
 
     return smpl_joints_2d_vis
     
+
+
 def visEFT_singleSubject(renderer):
-    # inputDir = args.fit_dir
+
+    bStopForEachSample = args.waitforkeys      #if True, it will wait for any key pressed to move to the next sample
+    bShowTurnTable = args.turntable
+
     inputData = args.fit_data
     imgDir = args.img_dir
 
-    smplModelDir = args.smpl_dir + '/basicModel_neutral_lbs_10_207_0_v1.0.0.pkl'
-    smpl = SMPL(smplModelDir, batch_size=1, create_transl=False)
-
-    # outputFolder = os.path.basename(inputDir) + '_dpOut'
-    # outputFolder =os.path.join('/run/media/hjoo/disk/data/eftout/',outputFolder)
+    #Load SMPL model
+    smplModelPath = args.smpl_dir + '/basicModel_neutral_lbs_10_207_0_v1.0.0.pkl'
+    smpl = SMPL(smplModelPath, batch_size=1, create_transl=False)
     
+    #Load EFT fitting data
+    print(f"Loading EFT data from {inputData}")
     if os.path.exists(inputData):
         with open(inputData,'r') as f:
             eft_data = json.load(f)
@@ -101,6 +108,8 @@ def visEFT_singleSubject(renderer):
         print(f"ERROR:: Cannot find EFT data: {inputData}")
         assert False
 
+
+    #Visualize each EFT Fitting output
     for idx, eft_data in enumerate(eft_data_all):
         
         #Get raw image path
@@ -123,35 +132,29 @@ def visEFT_singleSubject(renderer):
 
         pred_pose_rotmat = np.reshape( np.array( eft_data['parm_pose'], dtype=np.float32), (1,24,3,3)  )        #(24,3,3)
         pred_pose_rotmat = torch.from_numpy(pred_pose_rotmat)
-       
-        # gt_keypoint_2d = np.reshape( np.array(eft_data['gt_keypoint_2d']), (-1,3))    #(49,3)
 
         keypoint_2d_validity = eft_data['joint_validity_openpose18']
 
         #COCO only. Annotation index
         print("COCO annotId: {}".format(eft_data['annotId']))
 
-        """
-        #Obtain skeleton and smpl data
-            pred_betas: torch.Size([1, 10])
-            pred_pose_rotmat[:,1:]: torch.Size([1, 23, 3, 3])
-            pred_pose_rotmat[:,0].unsqueeze(1): torch.Size([1, 1, 3, 3])
-        """
+
+        #Get SMPL mesh and joints from SMPL parameters
         smpl_output = smpl(betas=pred_betas, body_pose=pred_pose_rotmat[:,1:], global_orient=pred_pose_rotmat[:,[0]], pose2rot=False)
         smpl_vertices = smpl_output.vertices.detach().cpu().numpy()[0]
         smpl_joints_3d = smpl_output.joints.detach().cpu().numpy()[0]
 
-        #Crop image
+        #Crop image using cropping information
         croppedImg, boxScale_o2n, bboxTopLeft = crop_bboxInfo(rawImg, bbox_center, bbox_scale, (BBOX_IMG_RES, BBOX_IMG_RES) )
 
         ########################
-        # Visualize
+        # Visualization
+        ########################
+
         # Visualize 2D image
         if True:
             viewer2D.ImShow(rawImg, name='rawImg', waitTime=1)      #You should press any key 
             viewer2D.ImShow(croppedImg, name='croppedImg', waitTime=1)
-            # image_2dkeypoint = viewer2D.Vis_Skeleton_2D_SPIN49(gt_keypoint_2d[:,:2], gt_keypoint_2d[:,2], image=rawImg.copy())
-            # image_2dkeypoint = viewer2D.Vis_Skeleton_2D_Openpose18(gt_keypoint_2d[:,:2], pt2d_visibility=keypoint_2d_validity, image=rawImg.copy())
 
             #Convert bbox_center, bbox_scale --> bbox_xyxy
             bbox_xyxy = conv_bboxinfo_bboxXYXY(bbox_scale,bbox_center)
@@ -203,11 +206,8 @@ def visEFT_singleSubject(renderer):
             renderImg = renderer.get_screen_color_ibgr()
             viewer2D.ImShow(renderImg,waitTime=1)
 
-            # out_all_f = render.get_z_value()
-
         # Visualization Mesh on side view
         if True:
-            # renderer.set_viewpoint()
             renderer.showBackground(False)
             renderer.setWorldCenterBySceneCenter()
             renderer.setCameraViewMode("side")
@@ -219,10 +219,27 @@ def visEFT_singleSubject(renderer):
             
             sideImg = cv2.resize(sideImg, (renderImg.shape[1], renderImg.shape[0]) )
 
+        #Visualize camera view and side view
         saveImg = np.concatenate( (renderImg,sideImg), axis =1)
-        viewer2D.ImShow(saveImg,waitTime=0)
 
-        if True:    #Save the rendered image to files
+        if bStopForEachSample:
+            viewer2D.ImShow(saveImg,waitTime=0) #waitTime=0 means that it will wait for any key pressed
+        else:
+            viewer2D.ImShow(saveImg,waitTime=1)
+        
+        #Render Mesh on the rotating view
+        if bShowTurnTable:
+            renderer.showBackground(False)
+            renderer.setWorldCenterBySceneCenter()
+            renderer.setCameraViewMode("free")
+            for i in range(90):
+                renderer.setViewAngle(i*4,0)
+                renderer.display()
+                sideImg = renderer.get_screen_color_ibgr()        #Overwite on rawImg
+                viewer2D.ImShow(sideImg,waitTime=1,name="turn_table")
+
+        #Save the rendered image to files
+        if True:    
             if os.path.exists(args.render_dir) == False:
                 os.mkdir(args.render_dir)
             render_output_path = args.render_dir + '/render_{:08d}.jpg'.format(idx)
@@ -231,11 +248,15 @@ def visEFT_singleSubject(renderer):
 
 
 def visEFT_multiSubjects(renderer):
+
+    bStopForEachSample = args.waitforkeys      #if True, it will wait for any key pressed to move to the next sample
+    bShowTurnTable = args.turntable
+    
     # inputDir = args.fit_dir
     inputData = args.fit_data
     imgDir = args.img_dir
-    smplModelDir = args.smpl_dir
-    smpl = SMPL(smplModelDir, batch_size=1, create_transl=False)
+    smplModelPath = args.smpl_dir + '/basicModel_neutral_lbs_10_207_0_v1.0.0.pkl'
+    smpl = SMPL(smplModelPath, batch_size=1, create_transl=False)
 
     if os.path.exists(inputData):
         with open(inputData,'r') as f:
@@ -287,7 +308,6 @@ def visEFT_multiSubjects(renderer):
             # gt_keypoint_2d = np.reshape( np.array(eft_data['gt_keypoint_2d']), (-1,3))    #(49,3)
             keypoint_2d_validity = eft_data['joint_validity_openpose18']
 
-
             #COCO only. Annotation index
             print("COCO annotId: {}".format(eft_data['annotId']))
 
@@ -304,7 +324,7 @@ def visEFT_multiSubjects(renderer):
             # Visualize 2D image
             if False:
                 viewer2D.ImShow(rawImg, name='rawImg', waitTime=1)      #You should press any key 
-                viewer2D.ImShow(croppedImg, name='croppedImg', waitTime=0)
+                viewer2D.ImShow(croppedImg, name='croppedImg', waitTime=1)
 
             # Visualization Mesh on raw images
             if True:    
@@ -343,17 +363,23 @@ def visEFT_multiSubjects(renderer):
         renderer.setCameraViewMode("cam")
         renderer.display()
         overlaid = renderer.get_screen_color_ibgr()        #Overwite on rawImg
-        viewer2D.ImShow(overlaid,waitTime=1,name="overlaid")
+        # viewer2D.ImShow(overlaid,waitTime=1,name="overlaid")
+
+        if bStopForEachSample:
+            viewer2D.ImShow(overlaid,waitTime=0,name="overlaid") #waitTime=0 means that it will wait for any key pressed
+        else:
+            viewer2D.ImShow(overlaid,waitTime=1,name="overlaid")
 
         #Render Mesh on the rotating view
-        renderer.showBackground(False)
-        renderer.setWorldCenterBySceneCenter()
-        renderer.setCameraViewMode("free")
-        for i in range(90):
-            renderer.setViewAngle(i*4,0)
-            renderer.display()
-            sideImg = renderer.get_screen_color_ibgr()        #Overwite on rawImg
-            viewer2D.ImShow(sideImg,waitTime=1,name="otherviews")
+        if bShowTurnTable:
+            renderer.showBackground(False)
+            renderer.setWorldCenterBySceneCenter()
+            renderer.setCameraViewMode("free")
+            for i in range(90):
+                renderer.setViewAngle(i*4,0)
+                renderer.display()
+                sideImg = renderer.get_screen_color_ibgr()        #Overwite on rawImg
+                viewer2D.ImShow(sideImg,waitTime=1,name="turn_table")
             
         if True:    #Save the rendered image to files
             if os.path.exists(args.render_dir) == False:
@@ -365,7 +391,7 @@ def visEFT_multiSubjects(renderer):
 if __name__ == '__main__':
     renderer = getRenderer(args.rendermode)
 
-    if args.bShowMultiSub:
+    if args.multi:
         visEFT_multiSubjects(renderer)
     else:
         visEFT_singleSubject(renderer)

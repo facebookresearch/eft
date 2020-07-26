@@ -1,6 +1,6 @@
 # [Exemplar Fine-Tuning for 3D Human Pose Fitting Towards In-the-Wild 3D Human Pose Estimation](https://arxiv.org/abs/2004.03686)
 
-This repository contains pseudo-GT 3D pose data data produced by [Exemplar Fine-Tuning (EFT)](https://arxiv.org/abs/2004.03686) method. The 3D pose data is in the form of [SMPL](https://smpl.is.tue.mpg.de/) parameters. 
+This repository contains pseudo-GT 3D pose data data produced by [Exemplar Fine-Tuning (EFT)](https://arxiv.org/abs/2004.03686) method. The 3D pose data is in the form of [SMPL](https://smpl.is.tue.mpg.de/) parameters, and this can be used as a supervision to train a 3D pose estimation algiritm (e.g., [SPIN](https://github.com/nkolot/SPIN) or [HMR](https://github.com/akanazawa/hmr)). We found that our EFT dataset is sufficient to build a model that is comparable to the previous SOTA algorithms without using any other indoor 3D pose dataset. See our [paper](https://arxiv.org/abs/2004.03686) for more details.
 
 ![Teaser Image](docs/example1.jpg)
 ![Teaser Image](docs/example2.jpg)
@@ -13,12 +13,10 @@ conda activate venv_eft
 pip install -r requirements.txt
 ```
 
-## Download EFT Fitting Results
-
+## Download EFT Fitting data (json formats)
 This repository only provides corresponding SMPL parameters for public 2D keypoint datasets (such as [COCO](https://cocodataset.org/), [MPII](http://human-pose.mpi-inf.mpg.de/)). You need to download images from the original dataset website.
 
-## Download EFT Fitting data (json formats)
-Run the following script
+Run the following script to download our EFT fitting data:
 ```
 sh scripts/download_eft.sh 
 ```

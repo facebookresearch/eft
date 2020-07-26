@@ -56,21 +56,26 @@ python -m demo.visEFTFit_coco --cocoAnnotFile (your_coco_path)/annotations/perso
 
 - Run,
 ```
- python -m demo.visEFTFit_gui --img_dir /your/dataset/path --fit_dir /your/dataset/path --smpl_dir /your/dataset/path
+ python -m demo.visEFTFit_gui --img_dir /your/dataset/path --fit_dir /your/dataset/path 
+
  #For example
- python -m demo.visEFTFit_gui --img_dir ~/data/coco/train2014 --fit_dir ~/CVPR2020_submit_fits/11-08_coco_with8143 --smpl_dir ./smpl
+ python -m demo.visEFTFit_gui --img_dir ~/data/coco/train2014 --fit_dir ~/CVPR2020_submit_fits/11-08_coco_with8143 
 ```
-- The default visualization will show all recontructed humans in each image. 
-- You can use "--bShowSingle" option to visualize a single human at each time
+- The default visualization will show a single person at each time
+- You can use "--multi" option to visualize all (reconstructed) humans for an image
 ```
-  python -m demo.visEFTFit_gui --img_dir ~/data/coco/train2014 --fit_dir ~/CVPR2020_submit_fits/11-08_coco_with8143 --smpl_dir ./smpl --bShowSingle
+  python -m demo.visEFTFit_gui --multi --img_dir ~/data/coco/train2014 --fit_dir ~/CVPR2020_submit_fits/11-08_coco_with8143 
 ```
 
- - If you can see 3D view, good! You can use mouse and keyboard to change viewpoint (see https://github.com/fairinternal/glViewer for the key info.)
+ - If you can see a 3D view, good! You can use mouse and keyboard to change viewpoint
  - In the 3d view, press 'q' to go to the next sample
- - Some other key info
+ - Other key information:
+   - mouse left + move: view change
+   - mouse right + move: zoom in/out
+   - shift + mouse left + move: pan
    - 'C': toggle between 3D view and image view
    - 'q': go to the next sample
    - 'w': toggle between solid mesh and wire-frame mesh
    - 'j': on/off for 3d skeleton
    - 'm': on/off for 3d mesh  
+   - 'f': on/off for floor

@@ -1793,6 +1793,9 @@ def DrawSkeletons():
                 drawbody_jointAdam(skel, skel_color)
             elif skel.shape[0]==189: #MTC skeleton from Hand2Body paper vis
                 drawbody_jointMTC86(skel, skel_color)
+            
+            elif skel.shape[0]==54: #OpenPose 18
+                drawbody_jointOpenPose18(skel, skel_color)
 
             elif skel.shape[0]==147: #SPIN 49 (25 openpose +  24 superset)
                 drawbody_jointSpin49(skel, skel_color)
@@ -2909,6 +2912,64 @@ def drawbody_jointSpin49(joints,  color, normal=None, ignore_root=False):
     glEnd()
 
 
+def drawbody_jointOpenPose18(joints,  color, normal=None, ignore_root=False):
+
+    skelSize = 2
+    #Openpose 18
+    link_openpose = [    [1,0] , [0,14] , [14,16] , [0,15], [15,17],
+                [1,2],[2,3],[3,4],      #Right Arm
+                [1,5], [5,6], [6,7],       #Left Arm
+                [1,11], [11,12], [12,13],       #Left Leg
+                [8,1], [8,9], [9,10]       #Right Leg
+                ]
+
+    #Visualize Joints
+    glColor3ub(color[0], color[1], color[2])
+    for i in range(1,int(len(joints)/3)):
+        glPushMatrix()
+        glTranslate(joints[3*i], joints[3*i+1], joints[3*i+2])
+        glutSolidSphere(skelSize, 10, 10)
+        glPopMatrix()
+
+    #Visualize Bones
+    glColor3ub(color[0], color[1], color[2])
+    for conn in link_openpose:
+        # x0, y0, z0 is the coordinate of the base point
+        x0 = joints[3*conn[0]]
+        y0 = joints[3*conn[0]+1]
+        z0 = joints[3*conn[0]+2]
+        # x1, y1, z1 is the vector points from the base to the target
+        x1 = joints[3*conn[1]] - x0
+        y1 = joints[3*conn[1]+1] - y0
+        z1 = joints[3*conn[1]+2] - z0
+
+        length = math.sqrt(x1*x1 + y1*y1 + z1*z1)
+        theta = math.degrees(math.acos(z1/length))
+        phi = math.degrees(math.atan2(y1, x1))
+
+        glPushMatrix()
+        glTranslate(x0, y0, z0)
+        glRotatef(phi, 0, 0, 1)
+        glRotatef(theta, 0, 1, 0)
+        glutSolidCone(skelSize, length, 10, 10)
+
+        glPopMatrix()
+
+    #Spine to ground projection
+    conn = [0,1]
+    x0 = joints[3*conn[0]]
+    y0 = joints[3*conn[0]+1]
+    z0 = joints[3*conn[0]+2]
+    # x1, y1, z1 is the vector points from the base to the target
+    x1 = joints[3*conn[1]]
+    y1 = joints[3*conn[1]+1]
+    z1 = joints[3*conn[1]+2]
+
+    glBegin(GL_LINES)
+    glVertex3f(x0, y0, z0)
+    glVertex3f(x1, y1, z1)
+    glEnd()
+
 
 def drawbody_jointSpin24(joints,  color, normal=None, ignore_root=False):
 
@@ -3000,8 +3061,6 @@ def drawbody_jointSpin24(joints,  color, normal=None, ignore_root=False):
 # 18 : Little_03
 # 19 : Ring_03
 # 20 : Thumb_03
-
-
 def drawhand_joint21(joints,  color, normal=None, ignore_root=False, type = 'hand_smplx'):
     if type=="hand_panopticdb":
         link_panoptic_hand =  [ [0,1], [1,2], [2,3], [3,4],  #thumb

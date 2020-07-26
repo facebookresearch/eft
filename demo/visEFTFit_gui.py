@@ -36,7 +36,7 @@ parser.add_argument('--fit_dir',default="/run/media/hjoo/disk/data/cvpr2020_eft_
 # parser.add_argument('--fit_dir',default="/run/media/hjoo/disk/data/cvpr2020_eft_researchoutput/0_SPIN/0_exemplarOutput/04-23_panoptic_with8143_iter60", type=str, help='dir path where fitting pkl files exist')
 
 parser.add_argument('--smpl_dir',default="./extradata/smpl", type=str , help='dir path where smpl pkl files exist')
-parser.add_argument('--bShowMultiSub',action="store_true", help='If True, show multi-person outputs at each time. Default, visualize a single person at each time')
+parser.add_argument('--multi',action="store_true", help='If True, show multi-person outputs at each time. Default, visualize a single person at each time')
 parser.add_argument('--magnifyFactor',type=int,default=1, help='Rendering window size maginification factor')
 parser.add_argument('--bRenderToFiles',action="store_true", help='Rendering the displayed output as files. Output Folder is specfied in render_dirName')
 parser.add_argument('--displaytime',default=1, type=float , help='Display time for each output. Default==0 meaning that it will wait until q prossed')
@@ -57,22 +57,6 @@ def getpath_level(imDir, imgFullPath,level=2):
         imgName = os.path.join(foldername, imgName)
     # frmName =  os.path.basename( os.path.dirname(imgFullPath))
     return os.path.join(imDir, imgName)
-
-
-def getpath_level3(imDir, imgFullPath):
-
-    imgName = os.path.basename(imgFullPath)
-    seqname = os.path.basename( os.path.dirname( os.path.dirname(imgFullPath)))
-    frmName =  os.path.basename( os.path.dirname(imgFullPath))
-    return os.path.join(imDir, seqname,frmName, imgName)
-
-def getpath_level2(imDir, imgFullPath):
-
-    imgName = os.path.basename(imgFullPath)
-    frmName =  os.path.basename( os.path.dirname(imgFullPath))
-    # seqname = os.path.basename( os.path.dirname( os.path.dirname(imgFullPath)))
-    return os.path.join(imDir,frmName, imgName)
-
 
 def visEFT_singleSubject(inputDir, imDir, smplModelDir, bUseSMPLX):
     if bUseSMPLX:
@@ -100,8 +84,6 @@ def visEFT_singleSubject(inputDir, imDir, smplModelDir, bUseSMPLX):
                 continue
             data = dataDict[k]
             # print(data['subjectId'])
-            
-            
             # continue
             if 'smpltype' in data:
                 if (data['smpltype'] =='smpl' and bUseSMPLX) or (data['smpltype'] =='smplx' and bUseSMPLX==False):
@@ -153,15 +135,7 @@ def visEFT_singleSubject(inputDir, imDir, smplModelDir, bUseSMPLX):
             rawImg = cv2.imread(imgFullPath)
             print(imgFullPath)
 
-            #Crop image
-            # croppedImg = crop(rawImg, center, scale, 
-            #               [constants.IMG_RES, constants.IMG_RES])
-
-            # try:
             croppedImg, boxScale_o2n, bboxTopLeft = crop_bboxInfo(rawImg, center, scale, (BBOX_IMG_RES, BBOX_IMG_RES) )
-            # except:
-                # continue
-
 
             #Visualize 2D image
             if args.bRenderToFiles ==False:
@@ -239,11 +213,6 @@ def visEFT_singleSubject(inputDir, imDir, smplModelDir, bUseSMPLX):
                     glViewer.render_on_image(render_dirName, fileName, rawImg)
                     print(f"Render to {fileName}")
                 
-                # glViewer.show(args.displaytime)
-                # glViewer.show(0)
-
-
-    # print("erroneous Num : {}/{} ({} percent)".format(erroneousCnt,totalCnt, float(erroneousCnt)*100/totalCnt))
  
 def save_mesh_obj(verts, faces, obj_mesh_name):
     with open(obj_mesh_name, "w") as fp:
@@ -274,7 +243,6 @@ def visEFT_multiSubjects(inputDir, imDir, smplModelDir, bUseSMPLX = False):
         
         if "_init" in f:
             continue
-
         #Load
         imageName = f[:f.rfind('_')]
         if imageName not in data_perimage.keys():
@@ -327,18 +295,6 @@ def visEFT_multiSubjects(inputDir, imDir, smplModelDir, bUseSMPLX = False):
             assert os.path.exists(imgFullPath)
             rawImg = cv2.imread(imgFullPath)
             print(imgFullPath)
-
-
-            # data['subjectId'] =0 #TODO debug
-
-            # fileName = "{}_{}".format(data['subjectId'],  os.path.basename(imgFullPathOri)[:-4])
-            # if args.bRenderToFiles and os.path.exists(os.path.join(render_dirName, fileName+".jpg")):
-            #  
-
-
-            #Crop image
-            # croppedImg = crop(rawImg, center, scale, 
-            #               [constants.IMG_RES, constants.IMG_RES])
 
             croppedImg, boxScale_o2n, bboxTopLeft = crop_bboxInfo(rawImg, center, scale, (constants.IMG_RES, constants.IMG_RES) )
 
@@ -399,26 +355,17 @@ def visEFT_multiSubjects(inputDir, imDir, smplModelDir, bUseSMPLX = False):
         if args.bRenderToFiles:        #Export rendered files
             if os.path.exists(render_dirName) == False:     #make a output folder if necessary
                     os.mkdir(render_dirName)
-
-            # subjId = data['subjectId'][22:24]
-            # fileName = "{}_{}".format(data['subjectId'],  os.path.basename(imgFullPathOri)[:-4])
             fileName = imgFullPathOri[:-4].replace("/","_")
-
-            # rawImg = cv2.putText(rawImg,data['subjectId'],(100,100), cv2.FONT_HERSHEY_PLAIN, 2, (255,255,0),2)
             glViewer.render_on_image(render_dirName, fileName, rawImg)
             print(f"render to {fileName}")
-        
 
         glViewer.show(args.displaytime)
 
-        # break   
-
-    print("erroneous Num : {}/{} ({} percent)".format(erroneousCnt,totalCnt, float(erroneousCnt)*100/totalCnt))
- 
 
 if __name__ == '__main__':
 
-    if args.bShowMultiSub:
-        visEFT_multiSubjects(args.fit_dir, args.img_dir, args.smpl_dir, bUseSMPLX=False)        #SMPLX version
+    smplPath =  args.smpl_dir + '/basicModel_neutral_lbs_10_207_0_v1.0.0.pkl'
+    if args.multi:
+        visEFT_multiSubjects(args.fit_dir, args.img_dir, smplPath, bUseSMPLX=False)        #SMPLX version
     else:
-        visEFT_singleSubject(args.fit_dir, args.img_dir, args.smpl_dir, bUseSMPLX=False)
+        visEFT_singleSubject(args.fit_dir, args.img_dir, smplPath, bUseSMPLX=False)

@@ -6,7 +6,7 @@ This repository contains pseudo-GT 3D human pose data produced by [Exemplar Fine
 ![Teaser Image](docs/example2.jpg)
 
 ## Installing Requirements
-It is convenient and safe to use conda environement
+It is convenient and safe to use conda environment
 ```
 conda create -n venv_eft python=3.6
 conda activate venv_eft

@@ -238,6 +238,10 @@ def visEFT_singleSubject(renderer):
                 sideImg = renderer.get_screen_color_ibgr()        #Overwite on rawImg
                 viewer2D.ImShow(sideImg,waitTime=1,name="turn_table")
 
+                if False:       #If you want to save this into files
+                    render_output_path = args.render_dir + '/turntable_{}_{:08d}.jpg'.format(os.path.basename(imgName),i)
+                    cv2.imwrite(render_output_path, sideImg)
+
         #Save the rendered image to files
         if True:    
             if os.path.exists(args.render_dir) == False:

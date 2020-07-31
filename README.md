@@ -4,6 +4,7 @@ This repository contains pseudo-GT 3D human pose data produced by [Exemplar Fine
 
 ![Teaser Image](docs/example1.jpg)
 ![Teaser Image](docs/example2.jpg)
+<img src="docs/3432.gif" height="367">
 
 ## Installing Requirements
 It is convenient and safe to use conda environement

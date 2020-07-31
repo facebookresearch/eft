@@ -2,9 +2,9 @@
 
 This repository contains pseudo-GT 3D human pose data produced by [Exemplar Fine-Tuning (EFT)](https://arxiv.org/abs/2004.03686) method for in-the-wild 2D images. The 3D pose data is in the form of [SMPL](https://smpl.is.tue.mpg.de/) parameters, and this can be used as a supervision to train a 3D pose estimation algiritm (e.g., [SPIN](https://github.com/nkolot/SPIN) or [HMR](https://github.com/akanazawa/hmr)). We found that our EFT dataset is sufficient to build a model that is comparable to the previous SOTA algorithms without using any other indoor 3D pose dataset. See our [paper](https://arxiv.org/abs/2004.03686) for more details.
 
-![Teaser Image](docs/example1.jpg)
-![Teaser Image](docs/example2.jpg)
-<img src="docs/3432.gif" height="367">
+<img src="docs/example1.jpg" height="256">
+<img src="docs/example2.jpg" height="256">
+<img src="docs/3432.gif" height="256">
 
 ## Installing Requirements
 It is convenient and safe to use conda environment

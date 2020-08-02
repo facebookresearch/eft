@@ -109,9 +109,6 @@ def visEFT_singleSubject(renderer):
     #Visualize each EFT Fitting output
     for idx, eft_data in enumerate(eft_data_all):
 
-        if idx <175:
-            continue
-        
         #Get raw image path
         imgFullPath = eft_data['imageName']
         imgName = os.path.basename(imgFullPath)

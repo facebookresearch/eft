@@ -66,8 +66,8 @@ def getRenderer(ren_type='geo'):
     elif ren_type=='densepose':
         renderer = denseposeRenderer.denseposeRenderer()
 
-    elif  ren_type=='torch3d':
-        renderer = torch3dRenderer.torch3dRenderer()
+    # elif  ren_type=='torch3d':
+    #     renderer = torch3dRenderer.torch3dRenderer()
     else:
         assert False
 

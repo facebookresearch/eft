@@ -44,7 +44,7 @@ xvfb-run python -m demo.visEFTFit
 ```
 
 - In the EFT files for COCO, you can find coco annotation ID in 'annotId'. 
-Check the following script to visualize EFT fitting with other COCO annotations (e.g., bbox, skeleton, or mask)
+Check the following example script to visualize EFT fitting with other COCO annotations (e.g., bbox, skeleton)
 ```
 python -m demo.visEFTFit_coco --cocoAnnotFile (your_coco_path)/annotations/person_keypoints_train2014.json
 

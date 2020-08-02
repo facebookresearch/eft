@@ -17,7 +17,7 @@ from eft.utils.imutils import convert_smpl_to_bbox, convert_bbox_to_oriIm
 from renderer import viewer2D#, glViewer, glRenderer
 from renderer import meshRenderer #glRenderer
 from renderer import denseposeRenderer #glRenderer
-from renderer import torch3dRenderer #glRenderer
+# from renderer import torch3dRenderer #glRenderer
 
 import argparse
 
@@ -75,8 +75,8 @@ def visEFT_singleSubject(renderer):
     inputDir = args.fit_dir
     imgDir = args.img_dir
 
-    smplModelDir = args.smpl_dir
-    smpl = SMPL(smplModelDir, batch_size=1, create_transl=False)
+    smplModelPath = args.smpl_dir + '/basicModel_neutral_lbs_10_207_0_v1.0.0.pkl'
+    smpl = SMPL(smplModelPath, batch_size=1, create_transl=False)
 
     print("Loading coco annotation")
     cocoAnnotDic = loadCOCOAnnot()

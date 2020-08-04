@@ -87,6 +87,8 @@ def conv_3djoint_2djoint(smpl_joints_3d_vis, imgshape):
 
 def visEFT_singleSubject(renderer):
 
+    MAGNIFY_RATIO = 3           #onbbox only. To magnify the rendered image size 
+
     bStopForEachSample = args.waitforkeys      #if True, it will wait for any key pressed to move to the next sample
     bShowTurnTable = args.turntable
 
@@ -147,6 +149,10 @@ def visEFT_singleSubject(renderer):
         #Crop image using cropping information
         croppedImg, boxScale_o2n, bboxTopLeft = crop_bboxInfo(rawImg, bbox_center, bbox_scale, (BBOX_IMG_RES, BBOX_IMG_RES) )
 
+
+        if MAGNIFY_RATIO>1:
+            croppedImg = cv2.resize(croppedImg, (croppedImg.shape[1]*MAGNIFY_RATIO, croppedImg.shape[0]*MAGNIFY_RATIO) )
+
         ########################
         # Visualization
         ########################
@@ -173,6 +179,8 @@ def visEFT_singleSubject(renderer):
                 smpl_joints_3d_vis = convert_smpl_to_bbox(smpl_joints_3d_vis, camParam_scale, camParam_trans)
                 renderer.setBackgroundTexture(croppedImg)
                 renderer.setViewportSize(croppedImg.shape[1], croppedImg.shape[0])
+
+                pred_vert_vis *=MAGNIFY_RATIO
             else:
                 #Covert SMPL to BBox first
                 pred_vert_vis = convert_smpl_to_bbox(pred_vert_vis, camParam_scale, camParam_trans)
@@ -201,7 +209,12 @@ def visEFT_singleSubject(renderer):
             renderer.setWorldCenterBySceneCenter()
             renderer.setCameraViewMode("cam")
 
-            renderer.setViewportSize(rawImg.shape[1], rawImg.shape[0])
+            #Set image size for rendering
+            if args.onbbox:
+                renderer.setViewportSize(croppedImg.shape[1], croppedImg.shape[0])
+            else:
+                renderer.setViewportSize(rawImg.shape[1], rawImg.shape[0])
+                
             renderer.display()
             renderImg = renderer.get_screen_color_ibgr()
             viewer2D.ImShow(renderImg,waitTime=1)
@@ -212,15 +225,21 @@ def visEFT_singleSubject(renderer):
             renderer.setWorldCenterBySceneCenter()
             renderer.setCameraViewMode("side")
 
-            renderer.setViewportSize(rawImg.shape[1], rawImg.shape[0])
+            #Set image size for rendering
+            if args.onbbox:
+                renderer.setViewportSize(croppedImg.shape[1], croppedImg.shape[0])
+            else:
+                renderer.setViewportSize(rawImg.shape[1], rawImg.shape[0])
             renderer.display()
             sideImg = renderer.get_screen_color_ibgr()        #Overwite on rawImg
             viewer2D.ImShow(sideImg,waitTime=1)
             
             sideImg = cv2.resize(sideImg, (renderImg.shape[1], renderImg.shape[0]) )
+            # renderImg = cv2.resize(renderImg, (sideImg.shape[1], sideImg.shape[0]) )
 
         #Visualize camera view and side view
-        saveImg = np.concatenate( (renderImg,sideImg), axis =1)
+        # saveImg = np.concatenate( (renderImg,sideImg), axis =1)
+        saveImg = np.concatenate( (croppedImg, renderImg,sideImg), axis =1)
 
         if bStopForEachSample:
             viewer2D.ImShow(saveImg,waitTime=0) #waitTime=0 means that it will wait for any key pressed
@@ -246,7 +265,7 @@ def visEFT_singleSubject(renderer):
         if True:    
             if os.path.exists(args.render_dir) == False:
                 os.mkdir(args.render_dir)
-            render_output_path = args.render_dir + '/render_{:08d}.jpg'.format(idx)
+            render_output_path = args.render_dir + '/render_{}_eft{:08d}.jpg'.format(imgName[:-4],idx)
             print(f"Save to {render_output_path}")
             cv2.imwrite(render_output_path, saveImg)
 

@@ -32,8 +32,10 @@ parser = argparse.ArgumentParser()
 # parser.add_argument('--img_dir',default="/run/media/hjoo/disk/data/coco/train2014", type=str , help='Folder path where input image files exist')
 # parser.add_argument('--fit_data',default="eft_fit/COCO2014-Part-ver01.json", type=str, help='EFT data json fortmat')
 
-parser.add_argument('--img_dir',default="/run/media/hjoo/disk/data/lspet_dataset/images_highres", type=str , help='Folder path where input image files exist')
+# parser.add_argument('--img_dir',default="/run/media/hjoo/disk/data/lspet_dataset/images_highres", type=str , help='Folder path where input image files exist')
 # parser.add_argument('--fit_data',default="eft_fit/LSPet_ver01.json", type=str, help='EFT data json fortmat')
+
+parser.add_argument('--img_dir',default="/run/media/hjoo/disk/data/mpii_human_pose_v1/images", type=str , help='Folder path where input image files exist')
 parser.add_argument('--fit_data',default="eft_fit/MPII_ver01.json", type=str, help='EFT data json fortmat')
 
 parser.add_argument('--smpl_dir',default="./extradata/smpl", type=str , help='Folder path where smpl pkl files exist')
@@ -87,7 +89,6 @@ def conv_3djoint_2djoint(smpl_joints_3d_vis, imgshape):
 
     return smpl_joints_2d_vis
     
-
 
 def visEFT_singleSubject(renderer):
 
@@ -227,7 +228,9 @@ def visEFT_singleSubject(renderer):
         if True:
             renderer.showBackground(False)
             renderer.setWorldCenterBySceneCenter()
-            renderer.setCameraViewMode("side")
+            # renderer.setCameraViewMode("side")    #To show the object in side vie
+            renderer.setCameraViewMode("free")     
+            renderer.setViewAngle(90,20)
 
             #Set image size for rendering
             if args.onbbox:
@@ -240,10 +243,31 @@ def visEFT_singleSubject(renderer):
             
             sideImg = cv2.resize(sideImg, (renderImg.shape[1], renderImg.shape[0]) )
             # renderImg = cv2.resize(renderImg, (sideImg.shape[1], sideImg.shape[0]) )
+        
+        # Visualization Mesh on side view
+        if True:
+            renderer.showBackground(False)
+            renderer.setWorldCenterBySceneCenter()
+            # renderer.setCameraViewMode("side")    #To show the object in side vie
+            renderer.setCameraViewMode("free")     
+            renderer.setViewAngle(-60,50)
+
+            #Set image size for rendering
+            if args.onbbox:
+                renderer.setViewportSize(croppedImg.shape[1], croppedImg.shape[0])
+            else:
+                renderer.setViewportSize(rawImg.shape[1], rawImg.shape[0])
+            renderer.display()
+            sideImg_2 = renderer.get_screen_color_ibgr()        #Overwite on rawImg
+            viewer2D.ImShow(sideImg_2,waitTime=1)
+            
+            sideImg_2 = cv2.resize(sideImg_2, (renderImg.shape[1], renderImg.shape[0]) )
+            # renderImg = cv2.resize(renderImg, (sideImg.shape[1], sideImg.shape[0]) )
+
 
         #Visualize camera view and side view
         # saveImg = np.concatenate( (renderImg,sideImg), axis =1)
-        saveImg = np.concatenate( (croppedImg, renderImg,sideImg), axis =1)
+        saveImg = np.concatenate( (croppedImg, renderImg,sideImg, sideImg_2), axis =1)
 
         if bStopForEachSample:
             viewer2D.ImShow(saveImg,waitTime=0) #waitTime=0 means that it will wait for any key pressed

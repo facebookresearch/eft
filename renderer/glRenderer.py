@@ -250,7 +250,7 @@ class glRenderer:
         self.m_zTrans = -self.m_meshCenter[2]
 
         self.m_zoom = min(self.m_zoom, 1000)
-        self.m_zoom = 100 * max(self.meshWidth,100)/100
+        self.m_zoom = 120 * max(self.meshWidth,100)/100
 
     def setZoom(self, z):
         self.m_zoom = z

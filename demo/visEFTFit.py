@@ -29,9 +29,13 @@ import json
 BBOX_IMG_RES = 224
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--img_dir',default="/run/media/hjoo/disk/data/coco/train2014", type=str , help='Folder path where input image files exist')
-# parser.add_argument('--fit_dir',default="/run/media/hjoo/disk/data/cvpr2020_eft_researchoutput/0_SPIN/0_exemplarOutput/04-14_cocoall_with8143_annotId", type=str, help='Folder path where EFT pkl files exist')
-parser.add_argument('--fit_data',default="eft_fit/COCO2014-Part-ver01.json", type=str, help='EFT data json fortmat')
+# parser.add_argument('--img_dir',default="/run/media/hjoo/disk/data/coco/train2014", type=str , help='Folder path where input image files exist')
+# parser.add_argument('--fit_data',default="eft_fit/COCO2014-Part-ver01.json", type=str, help='EFT data json fortmat')
+
+parser.add_argument('--img_dir',default="/run/media/hjoo/disk/data/lspet_dataset/images_highres", type=str , help='Folder path where input image files exist')
+# parser.add_argument('--fit_data',default="eft_fit/LSPet_ver01.json", type=str, help='EFT data json fortmat')
+parser.add_argument('--fit_data',default="eft_fit/MPII_ver01.json", type=str, help='EFT data json fortmat')
+
 parser.add_argument('--smpl_dir',default="./extradata/smpl", type=str , help='Folder path where smpl pkl files exist')
 # parser.add_argument('--export',action="store_true", help="Set if you want to export densepose label output from SMPL fits")
 parser.add_argument('--onbbox',action="store_true", help="Show the 3D pose on bbox space")

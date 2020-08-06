@@ -25,11 +25,22 @@ sh scripts/download_eft.sh
    - The EFT data will be saved in ./eft_fit/(DB_name).json. Each json file contains a version EFT fitting for a public dataset. 
    - See [Data Format](docs/README_dataformat.md) for details
    - Currently available EFT fitting outputs (cvpr submit version):
-      - COCO2014-All-ver01.json: COCO 2014 training set. 79051 samples, selecting the samples 6 keypoints or more keypoints are annotated.
-      - COCO2014-Part-ver01.json: COCO 2014 training set (a subset). 28344 samples, selecting the sample that all 12 limb keypoints are annotated.
-      - MPII_ver01.json : MPII Keypoint Dataset
-      - LSPet_ver01.json : LSPet Dataset
-      - Panoptic: TBA
+
+
+|Dataset Name   |  SampleNum | Version    | Manual Filtering |         File Name         |
+|---------------| -----------| ---------  | ---------------- |-------------------------- |
+|COCO2014-12kp  | 28K        | 0.1        | No               |  COCO2014-All-ver01.json  |
+|COCO2014-6kp   | 79K        | 0.1        | No               |  COCO2014-Part-ver01.json |
+|MPII           | 14K        | 0.1        | No               |  MPII_ver01.json          |
+|LSPet          | 7K         | 0.1        | No               |  LSPet_ver01.json         |
+
+  - COCO2014-All-ver01.json: [COCO](https://cocodataset.org/#home) 2014 training set by electing the samples 6 keypoints or more keypoints are annotated.
+  - COCO2014-Part-ver01.json: [COCO](https://cocodataset.org/#home) 2014 training set by selecting the sample that 12 limb keypoints or more are annotated.
+  - MPII_ver01.json : [MPII](http://human-pose.mpi-inf.mpg.de/) Keypoint Dataset
+  - LSPet_ver01.json : [LSPet](https://sam.johnson.io/research/lspet.html) Dataset
+  - [PanopticStudio DB](http://domedb.perception.cs.cmu.edu/): TBA
+  - Note that the number of samples are fewer than the original sample numbers in each DB, since we automatically filtered out bad samples
+  - Manual Filtering: we plan to filter out erroneous results by manual annotations 
 
 ### Download Other Required Data
 - SMPL Model (Neutral model: basicModel_neutral_lbs_10_207_0_v1.0.0.pkl):

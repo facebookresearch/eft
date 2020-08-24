@@ -32,8 +32,6 @@ parser.add_argument('--smpl_dir',default="./extradata/smpl", type=str , help='Fo
 parser.add_argument('--rendermode',default="geo", help="Choose among geo, normal, densepose")
 parser.add_argument('--render_dir',default="render_eft", help="Folder to save rendered images")
 parser.add_argument('--waitforkeys',action="store_true", help="If true, it will pasue after each visualizing each sample, waiting for any key pressed")
-# parser.add_argument('--turntable',action="store_true", help="If true, show turn table views")
-# parser.add_argument('--bShowMultiSub',action="store_true", help='If True, show multi-person outputs at each time. Default, visualize a single person at each time')
 parser.add_argument('--cocoAnnotFile',default='/run/media/hjoo/disk/data/coco/annotations/person_keypoints_train2014.json', type=str , help='COCO 2014 annotation file path')
 
 args = parser.parse_args()
@@ -81,7 +79,6 @@ def conv_3djoint_2djoint(smpl_joints_3d_vis, imgshape):
 def visEFT_singleSubject(renderer):
 
     bStopForEachSample = args.waitforkeys      #if True, it will wait for any key pressed to move to the next sample
-    # bShowTurnTable = args.turntable
 
     inputData = args.fit_data
     imgDir = args.img_dir

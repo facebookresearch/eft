@@ -10,7 +10,7 @@ import cv2
 import pickle
 import torch
 from smplx import SMPL
-# from fairmocap.models import SMPL
+# from bodymocap.models import SMPL
 
 from eft.utils.imutils import crop, crop_bboxInfo
 from eft.utils.imutils import convert_smpl_to_bbox, convert_bbox_to_oriIm

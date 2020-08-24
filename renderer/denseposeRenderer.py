@@ -42,7 +42,7 @@ class denseposeRenderer(glRenderer):
         dp_color_V =  np.repeat(dp_color_V,3,axis=1)    #(13774,3)
         self.dp_color_V = dp_color_V[self.dp_faces.reshape([-1])]  #(41332,3)
 
-    #make sure you have: /yourpath/fairMocap/renderer/densepose_uv_data/UV_Processed.mat
+    #make sure you have: /yourpath/renderer/densepose_uv_data/UV_Processed.mat
     def loadDensepose_info(self, dp_data_path= 'extradata/densepose_uv_data/UV_Processed.mat'):
         
         #Load densepose data

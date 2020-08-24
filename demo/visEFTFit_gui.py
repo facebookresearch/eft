@@ -9,10 +9,6 @@ import numpy as np
 import cv2
 import pickle
 
-# from fairmocap.core import constants 
-# from fairmocap.core import config 
-# import torch+
-
 from eft.utils.imutils import crop, crop_bboxInfo
 from eft.models import SMPL
 # from eft.models import SMPLX
@@ -28,13 +24,6 @@ from renderer import meshRenderer #glRenderer
 parser = argparse.ArgumentParser()
 parser.add_argument('--img_dir',default="/run/media/hjoo/disk/data/coco/train2014", type=str , help='dir path where input image files exist')
 parser.add_argument('--fit_dir',default="/run/media/hjoo/disk/data/cvpr2020_eft_researchoutput/0_SPIN/0_exemplarOutput/04-14_coco_with8143_annotId", type=str, help='dir path where fitting pkl files exist')
-
-#Panoptic DB
-# parser.add_argument('--img_dir',default="/run/media/hjoo/disk/data/panoptic_mtc/a4_release/hdImgs", type=str , help='dir path where input image files exist')
-# parser.add_argument('--fit_dir',default="/run/media/hjoo/disk/data/cvpr2020_eft_researchoutput/0_SPIN/0_exemplarOutput/04-23_panoptic_with8143_iter60", type=str, help='dir path where fitting pkl files exist')
-# parser.add_argument('--fit_dir',default="/home/hjoo/dropbox/garbage/04-24_panoptic_with8143_iter80_hand", type=str, help='dir path where fitting pkl files exist')
-# parser.add_argument('--fit_dir',default="/run/media/hjoo/disk/data/cvpr2020_eft_researchoutput/0_SPIN/0_exemplarOutput/04-23_panoptic_with8143_iter60", type=str, help='dir path where fitting pkl files exist')
-
 parser.add_argument('--smpl_dir',default="./extradata/smpl", type=str , help='dir path where smpl pkl files exist')
 parser.add_argument('--multi',action="store_true", help='If True, show multi-person outputs at each time. Default, visualize a single person at each time')
 parser.add_argument('--magnifyFactor',type=int,default=1, help='Rendering window size maginification factor')
@@ -110,11 +99,9 @@ def visEFT_singleSubject(inputDir, imDir, smplModelDir, bUseSMPLX):
                 
             scale = data['scale'][0]
             center = data['center'][0]
-
             # print(data['annotId'])
             ours_betas = torch.from_numpy(data['pred_shape'])
             ours_pose_rotmat = torch.from_numpy(data['pred_pose_rotmat'])
-            # spin_betas = torch.from_numpy(data['opt_beta'])
             
             #Compute 2D reprojection error
             # if not (data['loss_keypoints_2d']<0.0001 or data['loss_keypoints_2d']>0.001 :
@@ -277,8 +264,6 @@ def visEFT_multiSubjects(inputDir, imDir, smplModelDir, bUseSMPLX = False):
 
             ours_betas = torch.from_numpy(data['pred_shape'])
             ours_pose_rotmat = torch.from_numpy(data['pred_pose_rotmat'])
-            # spin_betas = torch.from_numpy(data['opt_beta'])
-            
             #Compute 2D reprojection error
             # if not (data['loss_keypoints_2d']<0.0001 or data['loss_keypoints_2d']>0.001 :
             #     continue
@@ -329,11 +314,8 @@ def visEFT_multiSubjects(inputDir, imDir, smplModelDir, bUseSMPLX = False):
                 #From cropped space to original
                 pred_vert_vis = convert_bbox_to_oriIm(pred_vert_vis, boxScale_o2n, bboxTopLeft, rawImg.shape[1], rawImg.shape[0]) 
                 pred_meshes = {'ver': pred_vert_vis, 'f': smpl.faces}
-                # glViewer.setMeshData([pred_meshes], bComputeNormal= True)
 
                 # ################ Visualize Skeletons ############### 
-                #Vis pred-SMPL joint
-                # pred_joints_vis = ours_joints_3d[b,-9:,:3].copy()     #(N,3)        #Debuggin
                 pred_joints_vis = ours_joints_3d[b,:,:3].copy()     #(N,3)
                 pred_joints_vis = convert_smpl_to_bbox(pred_joints_vis, camParam_scale, camParam_trans)
                 pred_joints_vis = convert_bbox_to_oriIm(pred_joints_vis, boxScale_o2n, bboxTopLeft, rawImg.shape[1], rawImg.shape[0]) 
@@ -341,14 +323,11 @@ def visEFT_multiSubjects(inputDir, imDir, smplModelDir, bUseSMPLX = False):
 
                 meshData.append(pred_meshes)
                 skelData.append(pred_joints_vis.ravel()[:,np.newaxis])
-                # glViewer.setSkeleton( [pred_joints_vis.ravel()[:,np.newaxis]])
 
                 glViewer.setBackgroundTexture(rawImg)
                 glViewer.setWindowSize(rawImg.shape[1]*args.magnifyFactor, rawImg.shape[0]*args.magnifyFactor)
                 glViewer.SetOrthoCamera(True)
 
-                # print("Press 'q' in the 3D window to go to the next sample")
-                # glViewer.show(0)
         glViewer.setSkeleton(skelData)
         glViewer.setMeshData(meshData, bComputeNormal= True)
 

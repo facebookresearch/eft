@@ -16,12 +16,11 @@ from eft.utils.imutils import crop, crop_bboxInfo
 from eft.utils.imutils import convert_smpl_to_bbox, convert_bbox_to_oriIm, conv_bboxinfo_bboxXYXY
 from eft.utils.geometry import weakProjection
 from renderer import viewer2D#, glViewer, glRenderer
-from renderer import meshRenderer #glRenderer
-from renderer import denseposeRenderer #glRenderer
-# from renderer import torch3dRenderer #glRenderer
+from renderer import meshRenderer #screen less opengl renderer
+from renderer import glViewer #gui mode opengl renderer
+from renderer import denseposeRenderer #densepose renderer
 
-# g_bExportDPOut = True   #Save to PKL file
-
+from tqdm import tqdm
 import argparse
 import json
 
@@ -29,17 +28,9 @@ import json
 BBOX_IMG_RES = 224
 
 parser = argparse.ArgumentParser()
-# parser.add_argument('--img_dir',default="/run/media/hjoo/disk/data/coco/train2014", type=str , help='Folder path where input image files exist')
-# parser.add_argument('--fit_data',default="eft_fit/COCO2014-Part-ver01.json", type=str, help='EFT data json fortmat')
-
-# parser.add_argument('--img_dir',default="/run/media/hjoo/disk/data/lspet_dataset/images_highres", type=str , help='Folder path where input image files exist')
-# parser.add_argument('--fit_data',default="eft_fit/LSPet_ver01.json", type=str, help='EFT data json fortmat')
-
 parser.add_argument('--img_dir',default="/run/media/hjoo/disk/data/mpii_human_pose_v1/images", type=str , help='Folder path where input image files exist')
 parser.add_argument('--fit_data',default="eft_fit/MPII_ver01.json", type=str, help='EFT data json fortmat')
-
 parser.add_argument('--smpl_dir',default="./extradata/smpl", type=str , help='Folder path where smpl pkl files exist')
-# parser.add_argument('--export',action="store_true", help="Set if you want to export densepose label output from SMPL fits")
 parser.add_argument('--onbbox',action="store_true", help="Show the 3D pose on bbox space")
 parser.add_argument('--rendermode',default="geo", help="Choose among geo, normal, densepose")
 parser.add_argument('--render_dir',default="render_eft", help="Folder to save rendered images")
@@ -117,7 +108,7 @@ def visEFT_singleSubject(renderer):
 
 
     #Visualize each EFT Fitting output
-    for idx, eft_data in enumerate(eft_data_all):
+    for idx, eft_data in enumerate(tqdm(eft_data_all)):
         
         #Get raw image path
         imgFullPath = eft_data['imageName']
@@ -266,8 +257,8 @@ def visEFT_singleSubject(renderer):
 
 
         #Visualize camera view and side view
-        # saveImg = np.concatenate( (renderImg,sideImg), axis =1)
-        saveImg = np.concatenate( (croppedImg, renderImg,sideImg, sideImg_2), axis =1)
+        saveImg = np.concatenate( (renderImg,sideImg), axis =1)
+        # saveImg = np.concatenate( (croppedImg, renderImg,sideImg, sideImg_2), axis =1)
 
         if bStopForEachSample:
             viewer2D.ImShow(saveImg,waitTime=0) #waitTime=0 means that it will wait for any key pressed
@@ -329,7 +320,7 @@ def visEFT_multiSubjects(renderer):
         eft_perimage[imageName].append(eft_data)
 
 
-    for imgName in eft_perimage:
+    for imgName in tqdm(eft_perimage):
         eft_data_perimage = eft_perimage[imgName]
         
         renderer.clear_mesh()

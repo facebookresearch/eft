@@ -10,7 +10,7 @@ import numpy as np
 import scipy.misc
 import cv2
 
-# from fairmocap.core import constants
+# from bodymocap.core import constants
 from torchvision.transforms import Normalize
 
 def get_transform(center, scale, res, rot=0):

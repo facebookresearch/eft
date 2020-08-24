@@ -9,16 +9,16 @@ import cv2
 from os import listdir
 import pickle
 
-from fairmocap.core import constants 
-from fairmocap.core import config 
+from bodymocap.core import constants 
+from bodymocap.core import config 
 import torch
 
 
 
-from fairmocap.utils.imutils import crop, crop_bboxInfo
-from fairmocap.models import SMPL
+from bodymocap.utils.imutils import crop, crop_bboxInfo
+from bodymocap.models import SMPL
 
-from fairmocap.utils.imutils import convert_smpl_to_bbox, convert_bbox_to_oriIm
+from bodymocap.utils.imutils import convert_smpl_to_bbox, convert_bbox_to_oriIm
 from renderer import viewer2D,glViewer, denseposeRenderer #glRenderer
 
 

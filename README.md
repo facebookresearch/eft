@@ -77,3 +77,5 @@ sh scripts/download_eft.sh
 See the [LICENSE](LICENSE) file. 
 
 
+## References
+The body mocap code is a modified version of [SPIN](https://github.com/nkolot/SPIN), and the majority of this code is borrowed from it.

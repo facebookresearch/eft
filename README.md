@@ -64,8 +64,7 @@ sh scripts/download_eft.sh
 
 
 ## Motion Capture Demo
-- See [GETTING_bodymocap](docs/GETTING_bodymocap.md)
-
+- See [GETTING_bodymocap](README_bodymocap.md)
 
 ## Citation
 ```

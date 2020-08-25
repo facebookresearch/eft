@@ -62,6 +62,11 @@ sh scripts/download_eft.sh
 ## Visualize EFT Fitting Results
 - See [GETTING_STARTED](docs/GETTING_STARTED.md)
 
+
+## Motion Capture Demo
+- See [GETTING_bodymocap](docs/GETTING_bodymocap.md)
+
+
 ## Citation
 ```
 @article{joo2020eft,

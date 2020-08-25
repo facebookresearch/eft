@@ -62,7 +62,8 @@ g_xMousePtStart = g_yMousePtStart = 0.
 g_xTrans = 0.
 g_yTrans = 0.
 g_zTrans = 0.
-g_zoom = 378
+# g_zoom = 378
+g_zoom = 1340.
 g_xRotate = 59.
 g_yRotate = -41.
 g_zRotate = 0.

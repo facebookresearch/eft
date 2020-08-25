@@ -151,7 +151,7 @@ class glRenderer:
         while True:
             curWidth =glutGet(GLUT_WINDOW_WIDTH)
             curHeight =  glutGet(GLUT_WINDOW_HEIGHT)
-            print("curWindSize: {}, {}".format(curWidth, curHeight))
+            # print("curWindSize: {}, {}".format(curWidth, curHeight))
 
             if curWidth == new_width and curHeight == new_height:
                 break
@@ -162,7 +162,7 @@ class glRenderer:
                 print("Wraning: Cannot resize the gl window")
                 break
 
-        print("{} refreshing is done to resize window".format(iterNum))
+        # print("{} refreshing is done to resize window".format(iterNum))
 
        
     def setViewportSize(self,new_width, new_height):

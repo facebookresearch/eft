@@ -48,6 +48,9 @@ class meshRenderer(glRenderer):
 
 
     def drawMesh(self):
+
+        if self.vertex_dim is None:
+            return
         # self.draw_init()
 
         glColor3f(1,1,0)

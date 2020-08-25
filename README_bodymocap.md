@@ -3,7 +3,7 @@
 We have released pre-trained 3D pose estimation models trained with our EFT dataset. Our pose estimation code is based on [SPIN](https://github.com/nkolot/SPIN) with modifications
 
 <p>
-    <img src="https://github.com/jhugestar/jhugestar.github.io/blob/master/img/eft_bodymocap.gif" height="480">
+    <img src="https://github.com/jhugestar/jhugestar.github.io/blob/master/img/eft_bodymocap.gif" height="256">
 </p>
 
 ## Requirements

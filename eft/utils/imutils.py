@@ -267,7 +267,15 @@ def conv_bboxinfo_center2topleft(scale, center):
 
     return np.array(bboxScale_o2n), np.array(bboxTopLeft_inOriginal)
 
+
+#Aliasing. Deprecated
 def conv_bboxinfo_bboxXYXY(scale, center):
+    """
+    from (scale, center) -> (topleft, bottom right)
+    """
+    return conv_bboxinfo_centerscale_to_bboxXYXY(center,scale)
+
+def conv_bboxinfo_centerscale_to_bboxXYXY(center, scale):
     """
     from (scale, center) -> (topleft, bottom right)
     """
@@ -284,12 +292,26 @@ def conv_bboxinfo_bboxXYXY(scale, center):
     return np.concatenate( (ul, br))
 
 
-def conv_bboxinfo_bboxXYXY_to_centerscale(bbox_xyxy):
+def conv_bboxinfo_bboxXYHW_to_centerscale(bbox_xyhw, bLooseBox = False):
     """
-    from (scale, center) -> (o2n, topleft)
+    from (bbox_xyhw) -> (center, scale)
+    Args:
+        bbox_xyhw: [minX,minY,W,H]
+        bLooseBox: if true, draw less tight box with sufficient margin (SPIN's default setting)
+    Output:
+        center: bbox center
+        scale: to make max size to 1.0
     """
-    pass
 
+    center = [bbox_xyhw[0] + bbox_xyhw[2]/2, bbox_xyhw[1] + bbox_xyhw[3]/2]
+
+    if bLooseBox:
+        scaleFactor =1.2
+        scale = scaleFactor*max(bbox_xyhw[2], bbox_xyhw[3])/200       #This is the one used in SPIN's pre-processing. See preprocessdb/coco.py
+    else:
+        scale = max(bbox_xyhw[2], bbox_xyhw[3])/224   
+
+    return center, scale
     # bbr = [bbox_xyxy[0],bbox_xyxy[1], bbox_xyxy[2]-bbox_xyxy[0]  , bbox_xyxy[3]-bbox_xyxy[2]]
     # center = bbr[:2] + 0.5 * bbr[2:]
     # bbox_size = max(bbr[2:])

@@ -73,15 +73,20 @@ def ImgSC(inputImg, waitTime=1, bConvRGB2BGR=False,name='image', scale=1.0):
 
 #     plt.show()
 
-#bbe: min_pt, max_pt
+#bbr: min_pt, max_pt
 def Vis_Bbox_minmaxPt(inputImg, min_pt, max_pt, color=None):
 
     bbr = [min_pt[0],min_pt[1], max_pt[0]- min_pt[0], max_pt[1]- min_pt[1]]
     return Vis_Bbox(inputImg, bbr, color)
 
 
-#bbe: [leftTop_x,leftTop_y,width,height]
+#bbr: [leftTop_x,leftTop_y,width,height]
+#Deprecated
 def Vis_Bbox(inputImg, bbr, color= None):
+    return Vis_Bbox_XYWH(inputImg, bbr, color)
+
+#bbr: [leftTop_x,leftTop_y,width,height]
+def Vis_Bbox_XYWH(inputImg, bbr, color= None):
 
     inputImg = __ValidateNumpyImg(inputImg)
 

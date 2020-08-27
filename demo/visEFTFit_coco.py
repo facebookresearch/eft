@@ -12,7 +12,7 @@ import torch
 from eft.models import SMPL
 
 from eft.utils.imutils import crop, crop_bboxInfo
-from eft.utils.imutils import convert_smpl_to_bbox, convert_bbox_to_oriIm, conv_bboxinfo_bboxXYXY
+from eft.utils.imutils import convert_smpl_to_bbox, convert_bbox_to_oriIm, conv_bboxinfo_centerscale_to_bboxXYXY, conv_bboxinfo_bboxXYHW_to_centerscale
 from renderer import viewer2D#, glViewer, glRenderer
 from renderer import meshRenderer #glRenderer
 from renderer import denseposeRenderer #glRenderer
@@ -137,9 +137,16 @@ def visEFT_singleSubject(renderer):
         ########################
         #Visualize COCO annotation
         annot_keypoint = np.reshape(np.array(annot['keypoints'], dtype=np.float32), (-1,3))     #17,3
-        rawImg = viewer2D.Vis_Skeleton_2D_coco(annot_keypoint[:,:2],annot_keypoint[:,2], image=rawImg)
-        rawImg = viewer2D.Vis_Bbox(rawImg, annot['bbox'],color=(0,255,0))
+        rawImg = viewer2D.Vis_Skeleton_2D_coco(annot_keypoint[:,:2], annot_keypoint[:,2], image=rawImg)
+        rawImg = viewer2D.Vis_Bbox_XYWH(rawImg, annot['bbox'],color=(0,255,0))       #Draw COCO bbox as green
 
+        #Debug: convert coco bbox -> EFT bbox (should be the same)
+        # bboxXYHW_coco = annot['bbox']
+        # coco_center, coco_scale = conv_bboxinfo_bboxXYHW_to_centerscale(bboxXYHW_coco,bLooseBox = True)
+        # bbox_xyxy_coco_loose = conv_bboxinfo_centerscale_to_bboxXYXY(coco_center, coco_scale )      ##Bbox from EFT dataset 
+        # rawImg = viewer2D.Vis_Bbox_minmaxPt(rawImg,bbox_xyxy_coco_loose[:2], bbox_xyxy_coco_loose[2:],color=(255,255,0))
+
+        ########################
         #Get SMPL mesh and joints from SMPL parameters
         smpl_output = smpl(betas=pred_betas, body_pose=pred_pose_rotmat[:,1:], global_orient=pred_pose_rotmat[:,[0]], pose2rot=False)
         smpl_vertices = smpl_output.vertices.detach().cpu().numpy()[0]
@@ -158,8 +165,8 @@ def visEFT_singleSubject(renderer):
             viewer2D.ImShow(croppedImg, name='croppedImg', waitTime=1)
 
             #Convert bbox_center, bbox_scale --> bbox_xyxy
-            bbox_xyxy = conv_bboxinfo_bboxXYXY(bbox_scale,bbox_center)
-            img_bbox = viewer2D.Vis_Bbox_minmaxPt(rawImg.copy(),bbox_xyxy[:2], bbox_xyxy[2:])
+            bbox_xyxy = conv_bboxinfo_centerscale_to_bboxXYXY(bbox_center, bbox_scale)      ##Bbox from EFT dataset 
+            img_bbox = viewer2D.Vis_Bbox_minmaxPt(rawImg.copy(),bbox_xyxy[:2], bbox_xyxy[2:])  #Draw COCO bbox as green
             viewer2D.ImShow(img_bbox, name='img_bbox', waitTime=1)
 
         # Visualization Mesh

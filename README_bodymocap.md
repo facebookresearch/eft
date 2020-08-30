@@ -89,6 +89,7 @@ sh scripts/download_mocapdata.sh
 - `--renderout ./outputdir`: Save the output images into files
 - `--pklout ./outputdir`: Save the pose reconstruction data (SMPL parameters and vertices) into pkl files
 - `--startFrame 100 --endFrame 200`: Specify start and end frames (e.g., 100th frame and 200th frame in this example)
+- `--single`: To enforce single person mocap (to avoid outlier bboxes). This mode chooses the biggest bbox. 
 
 
 ## Run demo with SMPL-X model (TODO)

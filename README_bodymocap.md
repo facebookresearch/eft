@@ -19,7 +19,7 @@ sh scripts/download_mocapdata.sh
 
 ## Installing third-party tools for bbox detection
 - Our 3D body mocap demo assumes a bounding box. For this, you need either of the following options.
-- (Option 1) by using [2D keypoint detector](lightweight-human-pose-estimation.pytorch): 
+- (Option 1) by using [2D keypoint detector](https://github.com/Daniil-Osokin/lightweight-human-pose-estimation.pytorch): 
     - Run the following script
     ```
     sh scripts/install_pose2d.sh
@@ -43,19 +43,19 @@ sh scripts/download_mocapdata.sh
 - Run the following. The mocap output will be shown on your screen
 ```
     # The output images are also saved in ./mocap_output
-    python -m demo.demo_bodymocap --vPath ./sample/han_short.mp4 --renderout ./mocap_output
+    python -m demo.demo_bodymocap --vPath ./sampledata/han_short.mp4 --renderout ./mocap_output
 
     #If you do not spefify the output folder, you can use a GUI mode
-    python -m demo.demo_bodymocap --vPath ./sample/han_short.mp4 
+    python -m demo.demo_bodymocap --vPath ./sampledata/han_short.mp4 
 
     #Speficy the pretrained-model path, if necessary
-    python -m demo.demo_bodymocap --vPath ./sample/han_short.mp4 --renderout ./mocap_output --checkpoint models_eft/2020_05_31-00_50_43-best-51.749683916568756.pt
+    python -m demo.demo_bodymocap --vPath ./sampledata/han_short.mp4 --renderout ./mocap_output --checkpoint models_eft/2020_05_31-00_50_43-best-51.749683916568756.pt
 ```
 
 - If you do not have a screen, use "xvfb-run" tool
 ```
     # The output images are also saved in ./mocap_output
-    xvfb-run python -m demo.demo_bodymocap --vPath ./sample/sample.mp4 --renderout ./mocap_output
+    xvfb-run python -m demo.demo_bodymocap --vPath ./sampledata/han_short.mp4 --renderout ./mocap_output
 ```
 ## Run demo with a webcam
 - Run,

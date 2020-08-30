@@ -8,7 +8,7 @@ We found that our EFT dataset is sufficient to build a model that is comparable 
     <img src="docs/3432.gif" height="256">
 </p>
 
-This repository also contains the pre-trained 3D pose estimation model trained with our EFT dataset and monocular motion capture demo tools. See [GETTING_bodymocap](README_bodymocap.md).
+This repository also contains the pre-trained 3D pose estimation model trained with our EFT dataset and monocular motion capture demo tools. See [README_bodymocap](README_bodymocap.md).
 <p>
     <img src="https://github.com/jhugestar/jhugestar.github.io/blob/master/img/eft_bodymocap.gif" height="256">
 </p>

@@ -16,10 +16,10 @@ cd ..
 echo "Downloading pretrained model"
 [ -d models_eft ] || mkdir models_eft
 cd models_eft
-wget dl.fbaipublicfiles.com/eft/2020_05_31-00_50_43-best-51.749683916568756.pt
+wget https://dl.fbaipublicfiles.com/eft/2020_05_31-00_50_43-best-51.749683916568756.pt
 cd ..
 
 echo "Downloading sample videos"
-wget s3://dl.fbaipublicfiles.com/eft/sampledata.tar && tar -xvf sampledata.tar && rm sampledata.tar
+wget https://dl.fbaipublicfiles.com/eft/sampledata.tar && tar -xvf sampledata.tar && rm sampledata.tar
 
 echo "Done"

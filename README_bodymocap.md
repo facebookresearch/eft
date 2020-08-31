@@ -55,7 +55,7 @@ sh scripts/download_mocapdata.sh
 - If you do not have a screen, use "xvfb-run" tool
 ```
     # The output images are also saved in ./mocap_output
-    xvfb-run python -m demo.demo_bodymocap --vPath ./sampledata/han_short.mp4 --renderout ./mocap_output
+    xvfb-run -a python -m demo.demo_bodymocap --vPath ./sampledata/han_short.mp4 --renderout ./mocap_output
 ```
 ## Run demo with a webcam
 - Run,
@@ -91,6 +91,31 @@ sh scripts/download_mocapdata.sh
 - `--startFrame 100 --endFrame 200`: Specify start and end frames (e.g., 100th frame and 200th frame in this example)
 - `--single`: To enforce single person mocap (to avoid outlier bboxes). This mode chooses the biggest bbox. 
 
+
+
+# Mocap output format (pkl)
+As output, the 3D pose estimation data per frame is saved as a pkl file. Each person's pose data is saved as follows:
+```
+mocap_single = {
+        'pred_rotmat': predoutput['pred_rotmat'],           #(1, 24,3, 3)
+        'pred_betas': predoutput['pred_betas'],             #(1,10)
+        'pred_camera': predoutput['pred_camera'],           #[cam_scale, cam_offset_x,, cam_offset_y ]
+        'pred_vertices_imgspace': predoutput['pred_vertices_img'],  #3D SMPL vertices where X,Y are aligned to images
+        'pred_joints_imgspace': predoutput['pred_joints_img'],      #3D joints where X,Y are aligned to images
+        'bbox_xyxy': predoutput['bbox_xyxy'],        #[minX,minY,maxX,maxY]
+
+        'bboxTopLeft': predoutput['bboxTopLeft'],   #(2,)       #auxiliary data used inside visualization
+        'boxScale_o2n': predoutput['boxScale_o2n']      #scalar #auxiliary data used inside visualization          
+}
+```
+# Load saved mocap data (pkl file)
+- Run the following code to load and visualize saved mocap data files
+```
+#./mocap_output/mocap is the directory where pkl files exist
+python -m  demo.demo_loadmocap --mocapdir ./mocap_output/mocap
+```
+- Note: current version use GUI mode for the visualization (requiring a screen). 
+- TODO: screenless rendereing. Saved as images and videos
 
 ## Run demo with SMPL-X model (TODO)
 - Current code is based on SMPL model, but you can run with SMPL-X model

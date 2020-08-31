@@ -164,7 +164,7 @@ class Visualizer(object):
         
         if len(bboxXYWH_list)>0:
             for bbr in bboxXYWH_list:
-                viewer2D.Vis_Bbox(img_original,bbr)
+                viewer2D.Vis_Bbox_XYWH(img_original,bbr)
         viewer2D.ImShow(img_original)
 
         #Check image height
@@ -224,19 +224,19 @@ class Visualizer(object):
         self.renderout['render_sideview'] = sideImg
 
 
-    def visualize_gui_naive(self, meshList, skelList, bboxXYWH_list, img_original):
+    def visualize_gui_naive(self, meshList, skelList, bboxXYWH_list=[], img_original=None):
         """
             args:
                 meshList: list of {'ver': pred_vertices, 'f': smpl.faces}
                 skelList: list of [JointNum*3, 1]       (where 1 means num. of frames in glviewer)
                 bbr_list: list of [x,y,w,h] 
         """
-        if len(bboxXYWH_list)>0:
-            for bbr in bboxXYWH_list:
-                viewer2D.Vis_Bbox(img_original,bbr)
-        viewer2D.ImShow(img_original)
-
-        glViewer.setWindowSize(img_original.shape[1], img_original.shape[0])
+        if img_original is not None:
+            if len(bboxXYWH_list)>0:
+                for bbr in bboxXYWH_list:
+                    viewer2D.Vis_Bbox(img_original,bbr)
+            viewer2D.ImShow(img_original)
+            glViewer.setWindowSize(img_original.shape[1], img_original.shape[0])
         # glViewer.setRenderOutputSize(inputImg.shape[1],inputImg.shape[0])
         glViewer.setBackgroundTexture(img_original)
         glViewer.SetOrthoCamera(True)
@@ -246,15 +246,17 @@ class Visualizer(object):
         if True:   #Save to File
             if True:        #Cam view rendering
                 # glViewer.setSaveFolderName(overlaidImageFolder)
-                glViewer.setNearPlane(500)
-                glViewer.setWindowSize(img_original.shape[1], img_original.shape[0])
+                glViewer.setNearPlane(50)
+                if img_original is not None:
+                    glViewer.setWindowSize(img_original.shape[1], img_original.shape[0])
                 # glViewer.show_SMPL(bSaveToFile = True, bResetSaveImgCnt = False, countImg = False, mode = 'camera')
                 glViewer.show(1)
 
             if False:    #Side view rendering
                 # glViewer.setSaveFolderName(sideImageFolder)
                 glViewer.setNearPlane(50)
-                glViewer.setWindowSize(img_original.shape[1], img_original.shape[0])
+                if img_original is not None:
+                    glViewer.setWindowSize(img_original.shape[1], img_original.shape[0])
                 glViewer.show_SMPL(bSaveToFile = True, bResetSaveImgCnt = False, countImg = True, zoom=1108, mode = 'youtube')
                 # glViewer.setSaveFolderName(g_renderDir)
                 # glViewer.show(0)

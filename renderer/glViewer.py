@@ -947,7 +947,7 @@ def motion(x, y):
     g_xMousePtStart = x
     g_yMousePtStart = y
 
-    print ('xTrans {},  yTrans {}, zoom {} xRotate{} yRotate {} zRotate {}'.format(g_xTrans,  g_yTrans,  g_zoom,  g_xRotate,  g_yRotate,  g_zRotate))
+    # print ('xTrans {},  yTrans {}, zoom {} xRotate{} yRotate {} zRotate {}'.format(g_xTrans,  g_yTrans,  g_zoom,  g_xRotate,  g_yRotate,  g_zRotate))
     glutPostRedisplay()
 
 def setBackgroundTexture(img):

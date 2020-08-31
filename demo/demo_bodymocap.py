@@ -199,14 +199,16 @@ def RunMonomocap(args, video_path, visualizer, bboxdetector, bodymocap, device, 
         
         if len(bboxXYWH_list)>0:
 
-            pred_rotmat_all =[]
-            pred_betas_all =[]
-            pred_camera_all =[]
-            pred_vertices_all =[]
-            pred_joints_3d_all =[]
-            bbox_all =[]
-            boxScale_o2n_all =[]
-            bboxTopLeft_all =[]
+            mocap_out =[]
+            # Old format
+            # pred_rotmat_all =[]
+            # pred_betas_all =[]
+            # pred_camera_all =[]
+            # pred_vertices_all =[]
+            # pred_joints_3d_all =[]
+            # bbox_all =[]
+            # boxScale_o2n_all =[]
+            # bboxTopLeft_all =[]
 
             for bboxXYHW in bboxXYWH_list:
 
@@ -222,38 +224,62 @@ def RunMonomocap(args, video_path, visualizer, bboxdetector, bodymocap, device, 
                 skelList.append(pred_joints_img.ravel()[:,np.newaxis])  #(49x3, 1)
 
                 if args.pklout:
-                    pred_rotmat_all.append(predoutput['pred_rotmat'])
-                    pred_betas_all.append(predoutput['pred_betas'])
-                    pred_camera_all.append(predoutput['pred_camera'])
-                    pred_vertices_all.append(pred_vertices_img)
-                    pred_joints_3d_all.append(pred_joints_img)
-                    bbox_all.append(predoutput['bbox_xyxy'])
 
-                    bboxTopLeft_all.append(predoutput['bboxTopLeft'])
-                    boxScale_o2n_all.append(predoutput['boxScale_o2n'])
+                    mocap_single = {
+                            'pred_rotmat': predoutput['pred_rotmat'],           #(1, 24,3, 3)
+                            'pred_betas': predoutput['pred_betas'],             #(1,10)
+                            'pred_camera': predoutput['pred_camera'],           #[cam_scale, cam_offset_x,, cam_offset_y ]
+                            'pred_vertices_imgspace': predoutput['pred_vertices_img'],  #3D SMPL vertices where X,Y are aligned to images
+                            'pred_joints_imgspace': predoutput['pred_joints_img'],      #3D joints where X,Y are aligned to images
+                            'bbox_xyxy': predoutput['bbox_xyxy'],        #[minX,minY,maxX,maxY]
+                            'bboxTopLeft': predoutput['bboxTopLeft'],   #(2,)       #auxiliary data used inside visualization
+                            'boxScale_o2n': predoutput['boxScale_o2n']      #scalar #auxiliary data used inside visualization
+                            #Old format below
+                            # pred_betas_all.append(predoutput['pred_betas'])
+                            # pred_camera_all.append(predoutput['pred_camera'])
+                            # pred_vertices_all.append(pred_vertices_img)
+                            # pred_joints_3d_all.append(pred_joints_img)
+                            # bbox_all.append(predoutput['bbox_xyxy'])
+                            # bboxTopLeft_all.append(predoutput['bboxTopLeft'])
+                            # boxScale_o2n_all.append(predoutput['boxScale_o2n'])
+                        }
+                    mocap_out.append(mocap_single)
+
+                    #Old format below
+                    # pred_rotmat_all.append(predoutput['pred_rotmat'])
+                    # pred_betas_all.append(predoutput['pred_betas'])
+                    # pred_camera_all.append(predoutput['pred_camera'])
+                    # pred_vertices_all.append(pred_vertices_img)
+                    # pred_joints_3d_all.append(pred_joints_img)
+                    # bbox_all.append(predoutput['bbox_xyxy'])
+                    # bboxTopLeft_all.append(predoutput['bboxTopLeft'])
+                    # boxScale_o2n_all.append(predoutput['boxScale_o2n'])
         
             ######################################################
             ## Export to pkl
-            if args.pklout and len(pred_rotmat_all)>0:
-                pred_rotmat_all = np.concatenate(pred_rotmat_all,axis=0)
-                pred_betas_all = np.concatenate(pred_betas_all,axis=0)
-                pred_camera_all = np.concatenate(pred_camera_all)
-                pred_vertices_all = np.concatenate(pred_vertices_all)
-                pred_joints_3d_all = np.concatenate(pred_joints_3d_all)
-                # bbox_all = np.concatenate(bbox_all)
-                # bboxTopLeft_all = np.concatenate(bboxTopLeft_all)
-                # boxScale_o2n_all =np.concatenate(boxScale_o2n_all)
-                dataOut = {
-                    'pred_rotmat_all': pred_rotmat_all,
-                    'pred_betas_all': pred_betas_all,
-                    'cams_person': pred_camera_all,
-                    'pred_joints_3d_all': pred_joints_3d_all,
-                    'verts_person_og':pred_vertices_all,
-                    'boxScale_o2n_all': boxScale_o2n_all,
-                    'bboxTopLeft_all': bboxTopLeft_all,
-                    'bbox':bbox_all
-                }
+            if args.pklout and len(mocap_out)>0:
 
+                # Old format below
+                # pred_rotmat_all = np.concatenate(pred_rotmat_all,axis=0)
+                # pred_betas_all = np.concatenate(pred_betas_all,axis=0)
+                # pred_camera_all = np.concatenate(pred_camera_all,axis=0)
+                # pred_vertices_all = np.concatenate(pred_vertices_all,axis=0)
+                # pred_joints_3d_all = np.concatenate(pred_joints_3d_all,axis=0)
+                # # bbox_all = np.concatenate(bbox_all)
+                # # bboxTopLeft_all = np.concatenate(bboxTopLeft_all)
+                # # boxScale_o2n_all =np.concatenate(boxScale_o2n_all)
+                # dataOut = {
+                #     'pred_rotmat_all': pred_rotmat_all,
+                #     'pred_betas_all': pred_betas_all,
+                #     # 'cams_person': pred_camera_all,
+                #     'pred_camera_all': pred_camera_all,
+                #     'pred_joints_3d_all': pred_joints_3d_all,
+                #     # 'verts_person_og':pred_vertices_all,
+                #     'pred_vertices_all':pred_vertices_all,
+                #     'boxScale_o2n_all': boxScale_o2n_all,
+                #     'bboxTopLeft_all': bboxTopLeft_all,
+                #     'bbox':bbox_all
+                # }
                 if renderOutRoot is None:
                     print("Please set output folder by --out")
                     assert False
@@ -265,7 +291,7 @@ def RunMonomocap(args, video_path, visualizer, bboxdetector, bodymocap, device, 
 
                     outputFileName_pkl = os.path.join(mocapOutFolder,os.path.basename(fName)[:-4]+'.pkl')
                     fout = open(outputFileName_pkl,'wb')
-                    pickle.dump(dataOut, fout)
+                    pickle.dump(mocap_out, fout)
                     fout.close()
         
         # g_timer.toc(average =True, bPrint=True,title="Detect+Regress")

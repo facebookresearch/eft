@@ -80,7 +80,7 @@ sh scripts/download_mocapdata.sh
         - q: exit program
 
 
-# Other options 
+## Other options 
 - `--webcam`: Run demo for a video file  (without using `--vPath` option)
 - `--vPath /your/path/video.mp4`: Run demo for a video file
 - `--vPath /your/dirPath`: Run demo for a folder that contains image seqeunces
@@ -93,7 +93,7 @@ sh scripts/download_mocapdata.sh
 
 
 
-# Mocap output format (pkl)
+## Mocap output format (pkl)
 As output, the 3D pose estimation data per frame is saved as a pkl file. Each person's pose data is saved as follows:
 ```
 mocap_single = {
@@ -108,7 +108,7 @@ mocap_single = {
         'boxScale_o2n': predoutput['boxScale_o2n']      #scalar #auxiliary data used inside visualization          
 }
 ```
-# Load saved mocap data (pkl file)
+## Load saved mocap data (pkl file)
 - Run the following code to load and visualize saved mocap data files
 ```
 #./mocap_output/mocap is the directory where pkl files exist

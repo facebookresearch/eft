@@ -80,31 +80,40 @@ def RunMonomocap(args, smpl, mocapDir, visualizer):
         # personNum = len(mocapData_frame)
         for mocapData in mocapData_frame:
 
-            pred_betas = torch.from_numpy( mocapData['pred_betas'][np.newaxis,:])
-            pred_rotmat = torch.from_numpy( mocapData['pred_rotmat'][np.newaxis,:])
+            pred_betas = torch.from_numpy( mocapData['pred_betas'][np.newaxis,:])[0]            #Always single element
+            pred_rotmat = torch.from_numpy( mocapData['pred_rotmat'][np.newaxis,:])[0]
             pred_vertices_imgspace =mocapData['pred_vertices_imgspace']
             pred_joints_imgspace =mocapData['pred_joints_imgspace']
 
-            # pred_output = smpl(betas=pred_betas, body_pose=pred_rotmat[:,1:], global_orient=pred_rotmat[:,0].unsqueeze(1), pose2rot=False)
-            # pred_vertices = pred_output.vertices
-            # pred_joints_3d = pred_output.joints
-            # pred_vertices = pred_vertices[0].cpu().numpy()
-            # pred_camera = pred_camera[0].numpy().ravel()
-            # camScale = pred_camera[0]#
-            # camTrans = pred_camera[1:]
-            # #Convert mesh to original image space (X,Y are aligned to image)
-            # pred_vertices_bbox = convert_smpl_to_bbox(pred_vertices, camScale, camTrans)  #SMPL -> 2D bbox
-            # pred_vertices_img = convert_bbox_to_oriIm(pred_vertices_bbox, boxScale_o2n, bboxTopLeft, img_original.shape[1], img_original.shape[0])       #2D bbox -> original 2D image
+            if False:    #One way to visualize SMPL from saved vertices
+                tempMesh = {'ver': pred_vertices_imgspace, 'f':  smpl.faces}
+                meshList=[]
+                skelList=[]
+                meshList.append(tempMesh)
+                skelList.append(pred_joints_imgspace.ravel()[:,np.newaxis])  #(49x3, 1)
 
-            tempMesh = {'ver': pred_vertices_imgspace, 'f':  smpl.faces}
-            meshList=[]
-            skelList=[]
-            bboxXYWH_list=[]
-            meshList.append(tempMesh)
-            skelList.append(pred_joints_imgspace.ravel()[:,np.newaxis])  #(49x3, 1)
+                # visualizer.visualize_screenless_naive(meshList, skelList, bboxXYWH_list, img_original_bgr)
+                visualizer.visualize_gui_naive(meshList, skelList)
 
-            # visualizer.visualize_screenless_naive(meshList, skelList, bboxXYWH_list, img_original_bgr)
-            visualizer.visualize_gui_naive(meshList, skelList, bboxXYWH_list)
+            elif False: #Alternative way from SMPL parameters
+                pred_output = smpl(betas=pred_betas, body_pose=pred_rotmat[:,1:], global_orient=pred_rotmat[:,[0] ], pose2rot=False)
+                pred_vertices = pred_output.vertices
+                pred_joints_3d = pred_output.joints
+                pred_vertices = pred_vertices[0].cpu().numpy()
+                
+                tempMesh = {'ver': pred_vertices_imgspace, 'f':  smpl.faces}
+                meshList=[]
+                skelList=[]
+                bboxXYWH_list=[]
+                meshList.append(tempMesh)
+                skelList.append(pred_joints_imgspace.ravel()[:,np.newaxis])  #(49x3, 1)
+                visualizer.visualize_gui_naive(meshList, skelList)
+
+            else: #Another, alternative way using a funtion
+                
+                smpl_pose_list =  [ pred_rotmat[0].numpy() ]        #build a numpy array
+                visualizer.visualize_gui_smplpose_basic(smpl, smpl_pose_list ,isRotMat=True )       #Assuming zero beta
+
         # g_timer.toc(average =True, bPrint=True,title="Detect+Regress+Vis")
 
 if __name__ == '__main__':

@@ -260,3 +260,48 @@ class Visualizer(object):
                 glViewer.show_SMPL(bSaveToFile = True, bResetSaveImgCnt = False, countImg = True, zoom=1108, mode = 'youtube')
                 # glViewer.setSaveFolderName(g_renderDir)
                 # glViewer.show(0)
+
+
+    def visualize_gui_smplpose_basic(self, smpl, poseParamList, shapeParamList =None,  colorList = None, isRotMat = False, scalingFactor=300, waittime =1):
+        '''
+            Visualize SMPL vertices from SMPL pose parameters
+            This can be used as a quick visualize function if you have a pose parameters
+
+            args: 
+                poseParamList: list of pose parameters (numpy array) in angle axis (72,) by default  or rot matrix (24,3,3) with isRotMat==True
+                shapeParamList: (optional) list of shape parameters (numpy array) (10,). If not provided, use a zero vector
+                colorList: (optional) list of color RGB values e.g., (255,0,0) for red
+        '''
+        zero_betas = torch.from_numpy(np.zeros( (1,10), dtype=np.float32))
+        default_color = glViewer.g_colorSet['eft']
+        meshList =[]
+        for i, poseParam in enumerate(poseParamList):
+            
+            if shapeParamList is not None:
+                shapeParam = torch.from_numpy(shapeParamList[i][np.newaxis,:])
+            else:
+                shapeParam = zero_betas#.copy()
+
+            if colorList is not None:
+                color = colorList[i]
+            else:
+                color = default_color
+
+            poseParam_tensor = torch.from_numpy( poseParam[np.newaxis,:]).float()
+            if isRotMat:        #rot mat
+                pred_output = smpl(betas=shapeParam, body_pose=poseParam_tensor[:,1:], global_orient=poseParam_tensor[:,[0]], pose2rot=False)
+
+            else:  #angle axis
+                pred_output = smpl(betas=shapeParam, body_pose=poseParam_tensor[:,:3], global_orient=poseParam_tensor[:,3:], pose2rot=True)
+        
+            nn_vertices = pred_output.vertices[0].numpy() * scalingFactor
+            tempMesh = {'ver': nn_vertices, 'f':  smpl.faces, 'color':color}
+            meshList.append(tempMesh)
+            
+        
+        # glViewer.setRenderOutputSize(inputImg.shape[1],inputImg.shape[0])
+        # glViewer.setBackgroundTexture(img_original)
+        # glViewer.SetOrthoCamera(True)
+        glViewer.setMeshData(meshList, bComputeNormal= True)        # meshes = {'ver': pred_vertices, 'f': smplWrapper.f}
+        # glViewer.setSkeleton(skelList)
+        glViewer.show(waittime)        #Press q to escape

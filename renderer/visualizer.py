@@ -292,7 +292,7 @@ class Visualizer(object):
                 pred_output = smpl(betas=shapeParam, body_pose=poseParam_tensor[:,1:], global_orient=poseParam_tensor[:,[0]], pose2rot=False)
 
             else:  #angle axis
-                pred_output = smpl(betas=shapeParam, body_pose=poseParam_tensor[:,:3], global_orient=poseParam_tensor[:,3:], pose2rot=True)
+                pred_output = smpl(betas=shapeParam, body_pose=poseParam_tensor[:,3:], global_orient=poseParam_tensor[:,:3], pose2rot=True)
         
             nn_vertices = pred_output.vertices[0].numpy() * scalingFactor
             tempMesh = {'ver': nn_vertices, 'f':  smpl.faces, 'color':color}

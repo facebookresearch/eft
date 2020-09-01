@@ -92,7 +92,6 @@ def RunMonomocap(args, smpl, mocapDir, visualizer):
                 meshList.append(tempMesh)
                 skelList.append(pred_joints_imgspace.ravel()[:,np.newaxis])  #(49x3, 1)
 
-                # visualizer.visualize_screenless_naive(meshList, skelList, bboxXYWH_list, img_original_bgr)
                 visualizer.visualize_gui_naive(meshList, skelList)
 
             elif False: #Alternative way from SMPL parameters
@@ -109,7 +108,7 @@ def RunMonomocap(args, smpl, mocapDir, visualizer):
                 skelList.append(pred_joints_imgspace.ravel()[:,np.newaxis])  #(49x3, 1)
                 visualizer.visualize_gui_naive(meshList, skelList)
 
-            else: #Another, alternative way using a funtion
+            else: #Another alternative way using a funtion
                 
                 smpl_pose_list =  [ pred_rotmat[0].numpy() ]        #build a numpy array
                 visualizer.visualize_gui_smplpose_basic(smpl, smpl_pose_list ,isRotMat=True )       #Assuming zero beta

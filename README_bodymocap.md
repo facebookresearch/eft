@@ -115,6 +115,38 @@ mocap_single = {
 python -m  demo.demo_loadmocap --mocapdir ./mocap_output/mocap
 ```
 - Note: current version use GUI mode for the visualization (requiring a screen). 
+- There are several options to visualize exported mesh:
+
+```
+if False:    #One way to visualize SMPL from saved vertices
+    tempMesh = {'ver': pred_vertices_imgspace, 'f':  smpl.faces}
+    meshList=[]
+    skelList=[]
+    meshList.append(tempMesh)
+    skelList.append(pred_joints_imgspace.ravel()[:,np.newaxis])  #(49x3, 1)
+
+    visualizer.visualize_gui_naive(meshList, skelList)
+
+elif False: #Alternative way from SMPL parameters
+    pred_output = smpl(betas=pred_betas, body_pose=pred_rotmat[:,1:], global_orient=pred_rotmat[:,[0] ], pose2rot=False)
+    pred_vertices = pred_output.vertices
+    pred_joints_3d = pred_output.joints
+    pred_vertices = pred_vertices[0].cpu().numpy()
+    
+    tempMesh = {'ver': pred_vertices_imgspace, 'f':  smpl.faces}
+    meshList=[]
+    skelList=[]
+    bboxXYWH_list=[]
+    meshList.append(tempMesh)
+    skelList.append(pred_joints_imgspace.ravel()[:,np.newaxis])  #(49x3, 1)
+    visualizer.visualize_gui_naive(meshList, skelList)
+
+else: #Another alternative way using a funtion
+    
+    smpl_pose_list =  [ pred_rotmat[0].numpy() ]        #build a numpy array
+    visualizer.visualize_gui_smplpose_basic(smpl, smpl_pose_list ,isRotMat=True )       #Assuming zero beta
+```
+
 - TODO: screenless rendereing. Saved as images and videos
 
 ## Run demo with SMPL-X model (TODO)

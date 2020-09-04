@@ -112,7 +112,8 @@ def visEFT_singleSubject(renderer):
         
         #Get raw image path
         imgFullPath = eft_data['imageName']
-        imgName = os.path.basename(imgFullPath)
+        # imgName = os.path.basename(imgFullPath)
+        imgName = imgFullPath
         imgFullPath =os.path.join(imgDir, imgName)
         if os.path.exists(imgFullPath) ==False:
             print(f"Img path is not valid: {imgFullPath}")
@@ -134,7 +135,8 @@ def visEFT_singleSubject(renderer):
         keypoint_2d_validity = eft_data['joint_validity_openpose18']
 
         #COCO only. Annotation index
-        print("COCO annotId: {}".format(eft_data['annotId']))
+        if 'annotId' in eft_data.keys():
+            print("COCO annotId: {}".format(eft_data['annotId']))
 
 
         #Get SMPL mesh and joints from SMPL parameters

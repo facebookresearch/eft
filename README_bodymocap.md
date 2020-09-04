@@ -79,7 +79,6 @@ sh scripts/download_mocapdata.sh
         - f: toggle floordrawing
         - q: exit program
 
-
 ## Other options 
 - `--webcam`: Run demo for a video file  (without using `--vPath` option)
 - `--vPath /your/path/video.mp4`: Run demo for a video file
@@ -89,7 +88,6 @@ sh scripts/download_mocapdata.sh
 - `--pklout --outputdir ./outputdirname`: Save the pose reconstruction data (SMPL parameters and vertices) into pkl files 
 - `--startFrame 100 --endFrame 200`: Specify start and end frames (e.g., 100th frame and 200th frame in this example)
 - `--single`: To enforce single person mocap (to avoid outlier bboxes). This mode chooses the biggest bbox. 
-
 
 
 ## Mocap output format (pkl)

@@ -36,8 +36,8 @@ sh scripts/download_eft.sh
 
 |Dataset Name   |  SampleNum | Version    | Manual Filtering |         File Name         |
 |---------------| -----------| ---------  | ---------------- |-------------------------- |
-|COCO2014-12kp  | 28K        | 0.1        | No               |  COCO2014-All-ver01.json  |
-|COCO2014-6kp   | 79K        | 0.1        | No               |  COCO2014-Part-ver01.json |
+|COCO2014-12kp  | 28K        | 0.1        | No               |  COCO2014-Part-ver01.json |
+|COCO2014-6kp   | 74K        | 0.1        | No               |  COCO2014-All-ver01.json  |
 |MPII           | 14K        | 0.1        | No               |  MPII_ver01.json          |
 |LSPet          | 7K         | 0.1        | No               |  LSPet_ver01.json         |
 

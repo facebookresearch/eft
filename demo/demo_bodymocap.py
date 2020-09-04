@@ -21,8 +21,10 @@ from renderer.visualizer import Visualizer
 from bodymocap.mocap_api import BodyMocap
 from demo.demo_bbox_detector import BodyBboxDetector
 
-
 from bodymocap.utils.timer import Timer
+from datetime import datetime
+
+
 g_timer = Timer()
 
 parser = argparse.ArgumentParser()
@@ -33,7 +35,7 @@ parser.add_argument('--vPath', type=str, default=None, help="""Path of video or 
 parser.add_argument('--webcam', '-W', action='store_true', help='Use webcam for video.')
 parser.add_argument('--bbox', type=str, default=None, help='Path to .json file containing bounding box coordinates')
 parser.add_argument('--openpose', type=str, default=None, help='Path to .json containing openpose detections')
-parser.add_argument('--renderout', type=str, default=None, help='Folder of output images.')
+parser.add_argument('--outputdir', type=str, default=None, help='Folder of output images.')
 parser.add_argument('--pklout', action='store_true', help='Export mocap output as pkl file')
 parser.add_argument('--url', '-U', type=str, default=None, help='URL of YouTube video, or image.')
 parser.add_argument('--bUseSMPLX', action='store_true', help='use SMPLX instead of SMPL. You should use a model trained with SMPL-X')
@@ -113,6 +115,9 @@ def RunMonomocap(args, video_path, visualizer, bboxdetector, bodymocap, device, 
             print(f"Failed in opening video: {video_path}")
             assert False
 
+    now = datetime.now()
+    seqName = now.today().strftime("%d_%m_%Y_")+ now.strftime("%H%M%S")
+    print(f"seqName{seqName}")
     cur_frame = args.startFrame -1
     while(True):
         # print("Start Mocap")
@@ -170,11 +175,19 @@ def RunMonomocap(args, video_path, visualizer, bboxdetector, bodymocap, device, 
 
         bboxXYWH_list = bboxdetector.detectBbox(img_original_bgr)
 
+        #Sort the bbox using bbox size (to make the order as consistent as possible without tracking)
+        diaSize =  [ (x[2]**2 + x[3]**2) for x in bboxXYWH_list]
+
+        idx_big2small = np.argsort(diaSize)[::-1]
+        bboxXYWH_list = [ bboxXYWH_list[i] for i in idx_big2small ] #sorted, big2small
+
         if args.single and len(bboxXYWH_list)>1:
+            bboxXYWH_list = [ bboxXYWH_list[0] ]        #nparray (1,4)
+
             #Chose the biggest one
-            diaSize =  [ (x[2]**2 + x[3]**2) for x in bboxXYWH_list]
-            bigIdx = np.argmax(diaSize)
-            bboxXYWH_list = [bboxXYWH_list[bigIdx]]
+            # diaSize =  [ (x[2]**2 + x[3]**2) for x in bboxXYWH_list]
+            # bigIdx = np.argmax(diaSize)
+            # bboxXYWH_list = [bboxXYWH_list[bigIdx]]
 
         g_debug_bboxonly= False
         if g_debug_bboxonly:
@@ -210,7 +223,9 @@ def RunMonomocap(args, video_path, visualizer, bboxdetector, bodymocap, device, 
             # boxScale_o2n_all =[]
             # bboxTopLeft_all =[]
 
-            for bboxXYHW in bboxXYWH_list:
+            for i, bboxXYHW in enumerate(bboxXYWH_list):
+
+                subjectId = seqName + '_{:03d}'.format(i)       #Without tracking, this value is not consistent
 
                 predoutput = bodymocap.regress(img_original_bgr, bboxXYHW)
                 if predoutput is None:
@@ -226,14 +241,18 @@ def RunMonomocap(args, video_path, visualizer, bboxdetector, bodymocap, device, 
                 if args.pklout:
 
                     mocap_single = {
-                            'pred_rotmat': predoutput['pred_rotmat'],           #(1, 24,3, 3)
-                            'pred_betas': predoutput['pred_betas'],             #(1,10)
-                            'pred_camera': predoutput['pred_camera'],           #[cam_scale, cam_offset_x,, cam_offset_y ]
+                            'parm_pose': predoutput['pred_rotmat'][0],           #(24,3, 3)
+                            'parm_shape': predoutput['pred_betas'][0],             #(10,)
+                            'parm_cam': predoutput['pred_camera'],           #[cam_scale, cam_offset_x,, cam_offset_y ]
+                            'bbox_xyxy': predoutput['bbox_xyxy'],        #[minX,minY,maxX,maxY]
+                            'subjectId': subjectId,       
                             'pred_vertices_imgspace': predoutput['pred_vertices_img'],  #3D SMPL vertices where X,Y are aligned to images
                             'pred_joints_imgspace': predoutput['pred_joints_img'],      #3D joints where X,Y are aligned to images
-                            'bbox_xyxy': predoutput['bbox_xyxy'],        #[minX,minY,maxX,maxY]
                             'bboxTopLeft': predoutput['bboxTopLeft'],   #(2,)       #auxiliary data used inside visualization
-                            'boxScale_o2n': predoutput['boxScale_o2n']      #scalar #auxiliary data used inside visualization
+                            'boxScale_o2n': predoutput['boxScale_o2n'],      #scalar #auxiliary data used inside visualization
+                            'smpltype': 'smpl',
+                            'annotId': -1,
+
                             #Old format below
                             # pred_betas_all.append(predoutput['pred_betas'])
                             # pred_camera_all.append(predoutput['pred_camera'])
@@ -354,7 +373,7 @@ if __name__ == '__main__':
 
     checkpoint = args.checkpoint
     video_path = get_video_path(args)
-    renderOutRoot = args.renderout
+    renderOutRoot = args.outputdir
 
     if renderOutRoot:
         visualizer = Visualizer('nongui')

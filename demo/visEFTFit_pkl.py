@@ -17,7 +17,7 @@ from eft.utils.imutils import convert_smpl_to_bbox, convert_bbox_to_oriIm
 from renderer import viewer2D#, glViewer, glRenderer
 from renderer import meshRenderer #glRenderer
 from renderer import denseposeRenderer #glRenderer
-from renderer import torch3dRenderer #glRenderer
+# from renderer import torch3dRenderer #glRenderer
 
 # g_bExportDPOut = True   #Save to PKL file
 

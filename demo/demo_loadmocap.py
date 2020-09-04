@@ -80,8 +80,8 @@ def RunMonomocap(args, smpl, mocapDir, visualizer):
         # personNum = len(mocapData_frame)
         for mocapData in mocapData_frame:
 
-            pred_betas = torch.from_numpy( mocapData['pred_betas'][np.newaxis,:])[0]            #Always single element
-            pred_rotmat = torch.from_numpy( mocapData['pred_rotmat'][np.newaxis,:])[0]
+            pred_betas = torch.from_numpy( mocapData['parm_shape'][np.newaxis,:])    #(10,)
+            pred_rotmat = torch.from_numpy( mocapData['parm_pose'][np.newaxis,:])   #24x3x3
             pred_vertices_imgspace =mocapData['pred_vertices_imgspace']
             pred_joints_imgspace =mocapData['pred_joints_imgspace']
 

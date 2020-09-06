@@ -109,7 +109,6 @@ def RunMonomocap(args, smpl, mocapDir, visualizer):
                 visualizer.visualize_gui_naive(meshList, skelList)
 
             else: #Another alternative way using a funtion
-                
                 smpl_pose_list =  [ pred_rotmat[0].numpy() ]        #build a numpy array
                 visualizer.visualize_gui_smplpose_basic(smpl, smpl_pose_list ,isRotMat=True )       #Assuming zero beta
 

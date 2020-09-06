@@ -244,14 +244,15 @@ def RunMonomocap(args, video_path, visualizer, bboxdetector, bodymocap, device, 
                             'parm_pose': predoutput['pred_rotmat'][0],           #(24,3, 3)
                             'parm_shape': predoutput['pred_betas'][0],             #(10,)
                             'parm_cam': predoutput['pred_camera'],           #[cam_scale, cam_offset_x,, cam_offset_y ]
-                            'bbox_xyxy': predoutput['bbox_xyxy'],        #[minX,minY,maxX,maxY]
                             'subjectId': subjectId,       
                             'pred_vertices_imgspace': predoutput['pred_vertices_img'],  #3D SMPL vertices where X,Y are aligned to images
                             'pred_joints_imgspace': predoutput['pred_joints_img'],      #3D joints where X,Y are aligned to images
-                            'bboxTopLeft': predoutput['bboxTopLeft'],   #(2,)       #auxiliary data used inside visualization
-                            'boxScale_o2n': predoutput['boxScale_o2n'],      #scalar #auxiliary data used inside visualization
+                            'bbox_xyxy': predoutput['bbox_xyxy'],        #[minX,minY,maxX,maxY]
+                            'bbox_topLeft': predoutput['bboxTopLeft'],   #(2,)       #auxiliary data used inside visualization
+                            'bbox_scale_o2n': predoutput['boxScale_o2n'],      #scalar #auxiliary data used inside visualization
                             'smpltype': 'smpl',
                             'annotId': -1,
+                            'imageName': fName
 
                             #Old format below
                             # pred_betas_all.append(predoutput['pred_betas'])

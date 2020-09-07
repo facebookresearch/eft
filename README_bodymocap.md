@@ -84,6 +84,9 @@ sh scripts/download_mocapdata.sh
         - R: automatically rotate views
         - f: toggle floordrawing
         - q: exit program
+<p>
+    <img src="https://github.com/jhugestar/jhugestar.github.io/blob/master/img/eft_gui_viewer_2.gif" height="256">
+</p>
 
 ## Other options 
 - `--webcam`: Run demo for a video file  (without using `--vPath` option)

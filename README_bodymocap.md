@@ -64,6 +64,12 @@ sh scripts/download_mocapdata.sh
 ```
 - Press "C" in the 3D window to see the scene in camera view (See below for GUI key information)
 
+## Run demo with precomputed bboxes
+- Save bboxes for each image as a json format. See [bbox format](https://github.com/facebookresearch/eft/blob/master/docs/README_dataformat.md#bbox-format-json). File name does not matters, since each json contains the target image path inside.
+- Assuming your bboxes are `/your/bbox_dir/XXX.json`
+```
+    python -m demo.demo_bodymocap --vPath /your/bbox_dir --outputdir ./mocap_output
+```
 
 ## GUI mode 
 - In GUI mode, you can use mouse and keyboard to change view point. 
@@ -83,7 +89,7 @@ sh scripts/download_mocapdata.sh
 - `--webcam`: Run demo for a video file  (without using `--vPath` option)
 - `--vPath /your/path/video.mp4`: Run demo for a video file
 - `--vPath /your/dirPath`: Run demo for a folder that contains image seqeunces
-- `--vPath /your/bboxDirPath`: Run demo for a folder that contains bbox json files. See [bbox format](https://github.com/facebookresearch/eft/blob/master/docs/README_dataformat.md#bbox-format-(json))
+- `--vPath /your/bboxDirPath`: Run demo for a folder that contains bbox json files. See [bbox format](https://github.com/facebookresearch/eft/blob/master/docs/README_dataformat.md#bbox-format-json)
 - `--download --url https://videourl/XXXX`: download public videos via `youtube-dl` and run with the downloaded video. (need to install youtube-dl first)
 - `--outputdir ./outputdirname`: Save the output images into files
 - `--pklout`: Save the pose reconstruction data (SMPL parameters and vertices) into pkl files   (requires `--outputdir ./outputdirname`)

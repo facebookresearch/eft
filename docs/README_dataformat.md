@@ -41,7 +41,7 @@ The original SMPL model has 45 joints. In our example, we use [OpenPose18](https
 - You can export/load bbox for body mocap
 - Format (json):
 ```
-{"imgPath": imagePath, "bboxes": list of bboxes_xywh}
+{"imgPath": imagePath, "bboxes_xywh": list of bboxes_xywh}
 ```
 - For example
 ```

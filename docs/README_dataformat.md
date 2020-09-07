@@ -31,6 +31,19 @@ SMPL model generates 3D mesh structure, and the order of 3D joints obtained from
 
 The original SMPL model has 45 joints. In our example, we use [OpenPose18](https://github.com/CMU-Perceptual-Computing-Lab/openpose/blob/master/doc/output.md) (similar to COCO)joint ordering. See [jointorders.py](https://github.com/facebookresearch/eft/blob/master/eft/cores/jointorders.py). 
 
+
 ## Bodymocap output format 
 - You can export [bodymocap](https://github.com/facebookresearch/eft/blob/bodymocap/README_bodymocap.md) output as pkl files (with --pklout flag)
 - The basic formtion is the same as json, but each pkl file contains 3D poses per each image. See [bodymocap](https://github.com/facebookresearch/eft/blob/master/README_bodymocap.md#load-saved-mocap-data-pkl-file)
+
+
+## BBox format (json)
+- You can export/load bbox for body mocap
+- Format (json):
+```
+{"imgPath": imagePath, "bboxes": list of bboxes_xywh}
+```
+- For example
+```
+{"imgPath": "/run/media/hjoo/disk/data/Penn_Action/frames/0001/000151.jpg", "bboxes_xywh": [[150, 126, 153, 184]]}
+```

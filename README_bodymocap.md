@@ -83,9 +83,11 @@ sh scripts/download_mocapdata.sh
 - `--webcam`: Run demo for a video file  (without using `--vPath` option)
 - `--vPath /your/path/video.mp4`: Run demo for a video file
 - `--vPath /your/dirPath`: Run demo for a folder that contains image seqeunces
+- `--vPath /your/bboxDirPath`: Run demo for a folder that contains bbox json files. See [bbox format](https://github.com/facebookresearch/eft/blob/master/docs/README_dataformat.md#bbox-format-(json))
 - `--download --url https://videourl/XXXX`: download public videos via `youtube-dl` and run with the downloaded video. (need to install youtube-dl first)
 - `--outputdir ./outputdirname`: Save the output images into files
-- `--pklout --outputdir ./outputdirname`: Save the pose reconstruction data (SMPL parameters and vertices) into pkl files 
+- `--pklout`: Save the pose reconstruction data (SMPL parameters and vertices) into pkl files   (requires `--outputdir ./outputdirname`)
+- `--bboxout`: Save the bbox data in json files (bbox_xywh format) (requires `--outputdir ./outputdirname`)
 - `--startFrame 100 --endFrame 200`: Specify start and end frames (e.g., 100th frame and 200th frame in this example)
 - `--single`: To enforce single person mocap (to avoid outlier bboxes). This mode chooses the biggest bbox. 
 

@@ -37,6 +37,7 @@ parser.add_argument('--bbox', type=str, default=None, help='Path to .json file c
 parser.add_argument('--openpose', type=str, default=None, help='Path to .json containing openpose detections')
 parser.add_argument('--outputdir', type=str, default=None, help='Folder of output images.')
 parser.add_argument('--pklout', action='store_true', help='Export mocap output as pkl file')
+parser.add_argument('--bboxout', action='store_true', help='Export bbox output as json')
 parser.add_argument('--url', '-U', type=str, default=None, help='URL of YouTube video, or image.')
 parser.add_argument('--bUseSMPLX', action='store_true', help='use SMPLX instead of SMPL. You should use a model trained with SMPL-X')
 parser.add_argument('--download', '-d', action='store_true', help='Download YouTube video first (in webvideo folder), and process it')
@@ -103,10 +104,30 @@ def RunMonomocap(args, video_path, visualizer, bboxdetector, bodymocap, device, 
 
     #Set up input data (images or webcam)
     imageList =[]
+    loaded_bboxList =None 
     cap =None
     if os.path.isdir(video_path):       #if video_path is a dir, load all videos
+
+
         imageList = sorted(os.listdir(video_path))
-        imageList = [os.path.join(video_path,f) for f in imageList]
+
+        if len(imageList)>0  and imageList[0][-4:] =='json':        #Handling bbox dir input
+            print("Found that this input folder has bboxes.")
+            bboxFiles = imageList
+            imageList=[]
+            loaded_bboxList =[]
+            for bn in bboxFiles:
+                bf = os.path.join(video_path, bn)
+                with open(bf,'r') as f:
+                    bbox = json.load(f)
+                    assert  'imgPath' in bbox and 'bboxes_xywh' in bbox
+                    imageList.append(bbox['imgPath'])
+
+                    bboxes_np = [ np.array(d) for d in bbox['bboxes_xywh']]
+                    loaded_bboxList.append(bboxes_np)
+
+        else:       #Otherwise, image dir
+            imageList = [os.path.join(video_path,f) for f in imageList]
     else:
         cap = cv2.VideoCapture(video_path)
         if os.path.exists(video_path):
@@ -173,7 +194,31 @@ def RunMonomocap(args, video_path, visualizer, bboxdetector, bodymocap, device, 
         ######################################################
         ## BBox detection
 
-        bboxXYWH_list = bboxdetector.detectBbox(img_original_bgr)
+        if loaded_bboxList is not None and len(loaded_bboxList)==len(imageList):
+            bboxXYWH_list = loaded_bboxList[cur_frame]
+        else:
+            bboxXYWH_list = bboxdetector.detectBbox(img_original_bgr)
+
+        if args.bboxout:
+            # bboxXYWH_list
+            if renderOutRoot is None:
+                    print("Please set output folder by --out")
+                    assert False
+            else:
+                bboxOutFolder = os.path.join(renderOutRoot,'bbox')
+                if not os.path.exists(bboxOutFolder):
+                    os.mkdir(bboxOutFolder)
+
+                outputFileName_json = os.path.join(bboxOutFolder,os.path.basename(fName)[:-4]+'.json')
+                fout = open(outputFileName_json,'w')
+                temp = [ list(d.astype(int)) for d in bboxXYWH_list ]
+                bboxXYWH_list_saved =[]
+                for d in temp:
+                    bboxXYWH_list_saved.append([int(dd) for dd in d])
+                json.dump( {'imgPath': fName, 'bboxes_xywh':bboxXYWH_list_saved}, fout)
+                fout.close()
+                
+
 
         #Sort the bbox using bbox size (to make the order as consistent as possible without tracking)
         diaSize =  [ (x[2]**2 + x[3]**2) for x in bboxXYWH_list]
@@ -209,7 +254,6 @@ def RunMonomocap(args, video_path, visualizer, bboxdetector, bodymocap, device, 
         ######################################################
         ## Body Pose Regression
 
-        
         if len(bboxXYWH_list)>0:
 
             mocap_out =[]

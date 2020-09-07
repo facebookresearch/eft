@@ -51,6 +51,10 @@ python -m demo.visEFTFit_coco --cocoAnnotFile (your_coco_path)/annotations/perso
 ```
 
 ## Visualizing EFT Fitting with GUI mode
+<p>
+    <img src="https://github.com/jhugestar/jhugestar.github.io/blob/master/img/eft_gui_viewer_2.gif" height="256">
+</p>
+
 - In this visualization, you can use your keyboard and mouse to see the fitting output from any view point.
 - Script: "demo/visEFTFit_gui.py" 
 

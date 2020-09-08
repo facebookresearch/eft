@@ -1,18 +1,6 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
-'''
-This code has opengl visualization of 3D skeletons, including floor visualization and mouse+keyboard control
-See the main function for demo codes.
-
-showSkeleton: visualize 3D human body skeletons. This can handle holden's formation, 3.6m formation, and domeDB
-setSpeech: to set speechAnnotation. Should be called before showSkeleton
-
-renderscene: main function to render scenes using openGL
-
-Note: this visualizer is assuming CM metric (joint, mesh).
-
-Hanbyul Joo (jhugestar@gmail.com)
-'''
+# Some parts are from https://github.com/CMU-Perceptual-Computing-Lab/ssp
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -32,18 +20,12 @@ import time
 #from time import time
 
 import pickle
-#import cPickle as pickle
-# import _pickle as pickle
-
-
+import timeit
 from renderer.render_utils import ComputeNormal
 
 #-----------
 # Global Variables
 #-----------
-#g_camView_fileName = '/ssd/camInfo/camInfo.pkl'
-g_camView_fileName = './camInfo/camInfo.pkl'
-
 g_fViewDistance = 50.
 # g_Width = 1280
 # g_Height = 720
@@ -63,7 +45,8 @@ g_xTrans = 0.
 g_yTrans = 0.
 g_zTrans = 0.
 # g_zoom = 378
-g_zoom = 1340.
+# g_zoom = 1340.
+g_zoom = 500.
 g_xRotate = 59.
 g_yRotate = -41.
 g_zRotate = 0.
@@ -78,17 +61,12 @@ g_specular = (0.2, 0.2, 0.2, 1.0)
 g_specref = (0.5, 0.5, 0.5, 1.0)
 
 
-# To visualize in Dome View point
+# # To visualize in Dome View point
 #g_viewMode = 'camView'#free' #'camView'
 g_viewMode = 'free' #'camView'
 g_bOrthoCam = False     #If true, draw by ortho camera mode
-from collections import deque
-#g_camid = deque('00',maxlen=2)
-g_camid = deque('27',maxlen=2)
-
 
 g_onlyDrawHumanIdx = -1
-
 
 # To save rendered scene into file
 g_stopMainLoop = False
@@ -157,9 +135,6 @@ g_rotateInterval = 2
 
 g_bShowSkeleton = True
 g_bShowMesh = True
-
-
-
 
 
 ########################################################
@@ -244,9 +219,6 @@ g_meshColor = (0.53, 0.53, 0.8)   #prediction: blue
 #      (0, 128, 0), (180, 130, 70), (147, 20, 255), (128, 128, 240), (154, 250, 0), (128, 0, 0),
 #      (30, 105, 210), (0, 165, 255), (170, 178, 32), (238, 104, 123)]
 
-import timeit
-
-
 
 #######################################v
 # Parametric Mesh Models
@@ -308,8 +280,6 @@ def init():
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
-
-
 
 def init_minimum():
     #global width
@@ -420,63 +390,6 @@ def setFree3DView():
     glTranslatef( g_xTrans,  0.0, 0.0 )
     glTranslatef(  0.0, g_yTrans, 0.0)
     glTranslatef(  0.0, 0, g_zTrans)
-
-
-# g_hdCams = None
-# def load_panoptic_cameras():
-#     global g_hdCams
-#     with open('/media/posefs3b/Users/xiu/domedb/171204_pose3/calibration_171204_pose3.json') as f:
-#         rawCalibs = json.load(f)
-#     cameras = rawCalibs['cameras']
-#     allPanel = map(lambda x:x['panel'],cameras)
-#     hdCamIndices = [i for i,x in enumerate(allPanel) if x==0]
-#     g_hdCams = [cameras[i] for i in hdCamIndices]
-
-# def setPanopticCameraView(camid):
-#     if g_hdCams==None:
-#         load_cameras()
-
-#     if camid>=len(g_hdCams):
-#         camid = 0
-#     cam = g_hdCams[camid]
-#     invR = np.array(cam['R'])
-#     invT = np.array(cam['t'])
-#     camMatrix = np.hstack((invR, invT))
-#     # denotes camera matrix, [R|t]
-#     camMatrix = np.vstack((camMatrix, [0, 0, 0, 1]))
-#     #camMatrix = numpy.linalg.inv(camMatrix)
-#     K = np.array(cam['K'])
-#     #K = K.flatten()
-#     glMatrixMode(GL_PROJECTION)
-#     glLoadIdentity()
-#     Kscale = 1920.0/g_Width
-#     K = K/Kscale
-#     ProjM = np.zeros((4,4))
-#     ProjM[0,0] = 2*K[0,0]/g_Width
-#     ProjM[0,2] = (g_Width - 2*K[0,2])/g_Width
-#     ProjM[1,1] = 2*K[1,1]/g_Height
-#     ProjM[1,2] = (-g_Height+2*K[1,2])/g_Height
-
-#     ProjM[2,2] = (-g_farPlane-g_nearPlane)/(g_farPlane-g_nearPlane)
-#     ProjM[2,3] = -2*g_farPlane*g_nearPlane/(g_farPlane-g_nearPlane)
-#     ProjM[3,2] = -1
-
-#     glLoadMatrixd(ProjM.T)
-#     glMatrixMode(GL_MODELVIEW)
-#     glLoadIdentity()
-#     gluLookAt(0, 0, 0, 0, 0, 1, 0, -1, 0)
-#     glMultMatrixd(camMatrix.T)
-
-
-# def load_MTC_default_camera():
-#     global g_Width,  g_Height
-
-#     camRender_width = 1920
-#     camRender_height = 1080
-
-#     g_Width = camRender_width
-#     g_Height = camRender_height
-
 
 # 3x3 intrinsic camera matrix
 def setCamView_K(K):
@@ -684,70 +597,6 @@ def SaveScenesToFile():
         #print(cur_ind)
 
     #glutPostRedisplay()
-
-
-def SaveCamViewInfo():
-    global g_Width, g_Height
-    global g_nearPlane,g_farPlane
-    global g_zoom,g_yRotate,g_xRotate, g_zRotate, g_xTrans, g_yTrans, g_zTrans
-
-    fileName = '/ssd/camInfo/camInfo.pkl'
-    if os.path.exists('/ssd/camInfo/') == False:
-            os.mkdir('/ssd/camInfo/')
-
-    if os.path.exists('/ssd/camInfo/archive/') == False:
-        os.mkdir('/ssd/camInfo/archive/')
-
-    if os.path.exists(fileName):
-        #resave it
-        for i in range(1000):
-            newName = '/ssd/camInfo/archive/camInfo_old{}.pkl'.format(i)
-            if os.path.exists(newName) == False:
-                import shutil
-                shutil.copy2(fileName,newName)
-                break
-
-    camInfo = dict()
-    camInfo['g_Width'] = g_Width
-    camInfo['g_Height']  =g_Height
-    camInfo['g_nearPlane'] = g_nearPlane
-    camInfo['g_farPlane'] = g_farPlane
-    camInfo['g_zoom'] = g_zoom
-    camInfo['g_yRotate'] = g_yRotate
-    camInfo['g_xRotate'] =g_xRotate
-    camInfo['g_zRotate'] = g_zRotate
-    camInfo['g_xTrans'] = g_xTrans
-    camInfo['g_yTrans'] = g_yTrans
-
-    pickle.dump( camInfo, open(fileName, "wb" ) )
-
-    print('camInfo')
-
-
-def LoadCamViewInfo():
-    global g_Width, g_Height
-    global g_nearPlane,g_farPlane
-    global g_zoom,g_yRotate,g_xRotate, g_zRotate, g_xTrans, g_yTrans
-    global g_camView_fileName
-    fileName = g_camView_fileName
-    if not os.path.exists(fileName):
-        print("No cam info: {}".format(fileName))
-        return
-
-    camInfo = pickle.load( open( fileName, "rb" ) , encoding='latin1')
-    g_yTrans = camInfo['g_Width']
-    g_Height = camInfo['g_Height']
-    g_nearPlane = camInfo['g_nearPlane']
-    g_farPlane = camInfo['g_farPlane']
-    g_zoom = camInfo['g_zoom']
-    g_yRotate = camInfo['g_yRotate']
-    g_xRotate = camInfo['g_xRotate']
-    g_zRotate = camInfo['g_zRotate']
-    g_xTrans = camInfo['g_xTrans']
-    g_yTrans= camInfo['g_yTrans']
-
-    reshape(g_Width, g_Height)
-
 
 def PuttingObjectCenter():
     global g_zoom, g_xTrans, g_yTrans, g_zTrans
@@ -1129,7 +978,7 @@ def specialkeys(key, x, y):
     #     cur_ind +=1
     glutPostRedisplay()
 
-from multiprocessing import Pool
+# from multiprocessing import Pool
 
 def init_gl_util():
     global g_bGlInitDone, g_lastframetime, g_currenttime, g_fps
@@ -1147,7 +996,7 @@ def init_gl_util():
         glutInitWindowSize(g_Width,g_Height)
 
         global g_winID
-        g_winID = glutCreateWindow("Visualize human skeleton")
+        g_winID = glutCreateWindow("3D Visualizer")
         init()
         # init_minimum()
         glutReshapeFunc(reshape)
@@ -1468,51 +1317,6 @@ def DrawMeshes():
 
     glBindBuffer(GL_ARRAY_BUFFER, 0)
     glBindVertexArray(0)    #Unbind
-
-# #normal3D: 3 dim
-# #joints70: 3x70 =210 dim
-# def drawfaceNormal_70(normal3D, joints,  color):
-
-#     glLineWidth(2.0)
-#     #Visualize Joints
-#     glColor3ub(color[0], color[1], color[2])
-
-#     #faceEye
-#     eyeCenterPoint = 0.5 *(joints[(45*3):(45*3+3)] + joints[(36*3):(36*3+3)])
-#     normalEndPoint = eyeCenterPoint+ normal3D * 20
-
-#     glBegin(GL_LINES)
-#     glVertex3f(eyeCenterPoint[0], eyeCenterPoint[1], eyeCenterPoint[2])
-#     glVertex3f(normalEndPoint[0], normalEndPoint[1], normalEndPoint[2])
-#     glEnd()
-
-#     glPushMatrix()
-#     glTranslate(normalEndPoint[0], normalEndPoint[1], normalEndPoint[2])
-#     glutSolidSphere(1, 10, 10)
-#     glPopMatrix()
-
-
-# #normal3D: 3 dim
-# #joints: 3x21
-# def drawbodyNormal(normal3D, rootPts,  color):
-
-#     glLineWidth(2.0)
-#     #Visualize Joints
-#     glColor3ub(color[0], color[1], color[2])
-
-#     #neckPoint = joints[(0*3):(0*3+3)]
-#     normalEndPoint = rootPts+ normal3D * 40
-
-#     glBegin(GL_LINES)
-#     glVertex3f(rootPts[0], rootPts[1], rootPts[2])
-#     glVertex3f(normalEndPoint[0], normalEndPoint[1], normalEndPoint[2])
-#     glEnd()
-
-#     glPushMatrix()
-#     glTranslate(normalEndPoint[0], normalEndPoint[1], normalEndPoint[2])
-#     glutSolidSphere(1, 10, 10)
-#     glPopMatrix()
-
 
 #normal3D: 3 dim
 #rootPt: 3x1
@@ -3203,147 +3007,6 @@ def drawbody_joint22(joints,  color, normal=None, ignore_root=False):
     glVertex3f(x1, y1, z1)
     glEnd()
 
-    # # Visualize Normals
-    # if normal is not None:
-    #     i=1
-    #     facePt = joints19[(3*i):(3*i+3)]
-    #     normalPt = facePt + normal*50
-
-    #     glColor3ub(0, 255, 255)
-    #     glPushMatrix()
-    #     glTranslate(normalPt[0], normalPt[1], normalPt[2])
-    #     glutSolidSphere(1, 10, 10)
-    #     glPopMatrix()
-
-    #     glBegin(GL_LINES);
-    #     glVertex3f(facePt[0], facePt[1], facePt[2]);
-    #     glVertex3f(normalPt[0], normalPt[1],  normalPt[2]);
-    #     glEnd()
-
-
-# # The following is for drawbody_joint73 (Holden's format)
-# sys.path.append('../motion/')
-# from Quaternions import Quaternions
-
-# # skel_list is a list of skeletonElement
-# # each skeletonElement: (73,frameNum)
-# # D. Holden's Data type
-# # Joints73: 73 dim = 22joint*3 + 3 (X_velocity,Z_velocity,Rot_Velocity) +  4 (footStep)
-# # Input
-# #   - initRot: Quaternion for the first frame in global coordinate
-# #   - initTrans: 3x1 vector or np array
-# def set_Holden_Data_73(skel_list, ignore_root=False, initRot = None, initTrans=None, bIsGT= False):
-#     #global HOLDEN_DATA_SCALING
-
-#     skel_list_output = []
-#     #footsteps_output = []
-
-#     for ai in range(len(skel_list)):
-#         anim = np.swapaxes(skel_list[ai].copy(), 0, 1)  # frameNum x 73
-
-#         if anim.shape[1]==73:
-#             joints, root_x, root_z, root_r = anim[:,:-7], anim[:,-7], anim[:,-6], anim[:,-5]
-#         elif anim.shape[1]==69:
-#             joints, root_x, root_z, root_r = anim[:,:-3], anim[:,-3], anim[:,-2], anim[:,-1]
-#         joints = joints.reshape((len(joints), -1, 3)) #(frameNum,66) -> (frameNum, 22, 3)
-
-#         if initRot is None:
-#             rotation = Quaternions.id(1)
-#         else:
-#             rotation = initRot[ai]
-#         offsets = []
-
-#         if initTrans is None:
-#             translation = np.array([[0,0,0]])   #1x3
-#         else:
-#             translation = np.array(initTrans[ai])
-#             if translation.shape[0]==3:
-#                 translation = np.swapaxes(translation,0,1)
-
-
-#         if not ignore_root:
-#             for i in range(len(joints)):
-#                 joints[i,:,:] = rotation * joints[i]
-#                 joints[i,:,0] = joints[i,:,0] + translation[0,0]
-#                 joints[i,:,2] = joints[i,:,2] + translation[0,2]
-#                 rotation = Quaternions.from_angle_axis(-root_r[i], np.array([0,1,0])) * rotation
-#                 offsets.append(rotation * np.array([0,0,1]))
-#                 translation = translation + rotation * np.array([root_x[i], 0, root_z[i]])
-
-#         #joints dim:(frameNum, 22, 3)
-#         #Scaling
-#         joints[:,:,:] = joints[:,:,:] * HOLDEN_DATA_SCALING#5 #m -> cm
-#         joints[:,:,1] = joints[:,:,1] *-1 #Flip Y axis
-
-#         #Reshaping
-#         joints = joints.reshape(joints.shape[0], joints.shape[1]*joints.shape[2]) # frameNum x 66
-#         joints =  np.swapaxes(joints, 0, 1)  # 66  x frameNum
-
-#         skel_list_output.append(joints)
-#         #footsteps_output.append(anim[:,-4:])
-
-
-#     #adjust length
-#     length = min( [ i.shape[1] for i in skel_list_output])
-#     skel_list_output = [ f[:,:length] for f in skel_list_output ]
-
-#     skel_list_output = np.asarray(skel_list_output)
-#     #return skel_list_output #(skelNum, 66, frameNum)
-#     #showSkeleton(skel_list_output)
-#     setSkeleton(skel_list_output, bIsGT)
-
-
-# # traj_list is a list of 3 dim tran+rot infor
-# # each trajectory data: (3,frameNum)
-# # D. Holden's Data type
-# # 3 dim = 3 (X_velocity,Z_velocity,Rot_Velocity)
-# def set_Holden_Trajectory_3(traj_list, initRot = None, initTrans=None ):
-
-#     global HOLDEN_DATA_SCALING
-
-#     traj_list_output = []
-
-#     for ai in range(len(traj_list)):
-
-#         root_x, root_z, root_r = traj_list[ai][0,:], traj_list[ai][1,:], traj_list[ai][2,:]
-
-#         if initRot is None:
-#             rotation = Quaternions.id(1)
-#         else:
-#             rotation = initRot[ai]
-#         offsets = []
-
-#         if initTrans is None:
-#             translation = np.array([[0,0,0]])   #1x3
-#         else:
-#             translation = np.array(initTrans[ai])
-#             if translation.shape[0]==3:
-#                 translation = np.swapaxes(translation,0,1)
-
-#         # joints = np.array([0,0,0])
-#         # joints = np.repeat(joints, )
-#         # joints = joints.reshape((len(joints), -1, 3)) #(frameNum,66) -> (frameNum, 22, 3)
-#         joints = np.zeros((len(root_x),2,3))        #(frames, 2,3) for original and directionPt
-#         joints[:,1,2] = 10 #Normal direction
-
-#         for i in range(len(joints)):
-#             joints[i,:,:] = rotation * joints[i]
-#             joints[i,:,0] = joints[i,:,0] + translation[0,0]
-#             joints[i,:,2] = joints[i,:,2] + translation[0,2]
-#             rotation = Quaternions.from_angle_axis(-root_r[i], np.array([0,1,0])) * rotation
-#             offsets.append(rotation * np.array([0,0,1]))
-#             translation = translation + rotation * np.array([root_x[i], 0, root_z[i]])
-
-#         #Reshaping
-#         joints = joints.reshape(joints.shape[0], joints.shape[1]*joints.shape[2]) # (frameNum,jointDim,3) -> (frameNum, jointDim*3)
-#         joints =  np.swapaxes(joints, 0, 1)  # jointDim*3  x frameNum
-
-#         joints = joints*HOLDEN_DATA_SCALING
-#         traj_list_output.append(joints)
-
-#     traj_list_output = np.asarray(traj_list_output)
-#     setTrajectory(traj_list_output)         #(trajNum, joitnDim*3, frames)
-
 """
     input:
      - speech_list: list of speechData
@@ -4024,367 +3687,6 @@ def getFaceRootCenter():
 
 #     return vertex_normals
 
-
-#####################################################
-### FaceOnly Model Visualization (todo. move this to another file)
-# Input:
-# - bApplyRot: if True, apply global face orientation
-# Output:
-# - 'ver': (frames, 11510, 3)
-# - 'normal': (frames, 11510, 3)
-# - 'f': (22800,3)
-# - 'centers': (frames,3)
-from modelViewer.batch_lbs import batch_rodrigues
-
-
-import scipy.io as sio
-def GetFaceMesh(faceModel, faceParam_list, bComputeNormal = True, bApplyRot = False, bApplyTrans = False, bShowFaceId = False, bApplyRotFlip=False):
-
-    MoshParam_list = []
-
-    v_template = faceModel['v_template'] #11510 x 3
-    v_template_flat = v_template.flatten()  #(34530,)
-    v_template_flat = v_template_flat[:,np.newaxis] #(34530,1)  for broadcasting
-
-    trifaces = faceModel['trifaces']  #22800 x 3
-
-    U_id = faceModel['U_id'] #34530 x 150
-    U_exp = faceModel['U_exp'] #34530 x 200
-
-
-    for i, faceParam in enumerate(faceParam_list):
-
-        print('processing: humanIdx{0}/{1}'.format(i, len(faceParam_list) ))
-        #faceParam = faceParam_all[humanIdx]
-
-
-        #Debug: only use the first 5
-        faceParam['face_exp'][5:,:]=0
-
-        """Computing face vertices for all frames simultaneously"""
-        face_exp_component = np.matmul(U_exp, faceParam['face_exp']) #(34,530 x 200)  x  (200 x frames)
-
-        v_face_allFrames = v_template_flat + face_exp_component  #(34530 x frames). Ignore face Identity information
-
-        if bShowFaceId:
-            face_id_component = np.matmul(U_id, faceParam['face_id']) #(34,530 x 150)  x  (150 x frames)
-            v_face_allFrames += face_id_component #(34530 x frames)
-            #v_face_allFrames = v_template_flat+ face_id_component +face_exp_component  #(34530 x frames)
-
-        v_face_allFrames = v_face_allFrames.swapaxes(0,1) # (frames, 34530)
-        v_face_allFrames = np.reshape(v_face_allFrames,[v_face_allFrames.shape[0], -1, 3]) # (frames, 11510, 3)
-
-
-        faceMassCenter = np.zeros((3,faceParam['face_exp'].shape[1]))#*0.0 #(3, frames)
-        if 'rot_pivot' in faceParam.keys():
-
-
-            rot_pivot = np.swapaxes(faceParam['rot_pivot'],0,1) #(frames,3)
-            rot_pivot = np.expand_dims(rot_pivot,1)  #(frames,1, 3)
-
-            v_face_allFrames = v_face_allFrames - rot_pivot     # (frames, 11510, 3)
-
-        if bApplyRot:
-            #Apply rotationsvf
-            global_rot = None
-            #computing global rotation
-            global_rot =  batch_rodrigues(np.swapaxes(faceParam['rot'],0,1)) #input (Nx3), output: (N,3,3)
-
-
-
-            #global_rot *( v_face_allFrames - rot_pivot)
-            for f in range(v_face_allFrames.shape[0]):
-
-                pts = np.swapaxes(v_face_allFrames[f,:,:],0,1) # (3,11510)
-
-                if bApplyRotFlip:
-                    #Flip
-                    rot = np.array( [ 0, -1, 0,  1,  0,  0, 0, 0, 1])
-                    rot = np.reshape(rot,(3,3))
-                    pts =  np.matmul( rot, pts)  # (3,3)  x (11510,3) =>(3,11510)
-                    pts =  np.matmul( rot, pts)  # (3,3)  x (11510,3) =>(3,11510)
-                    pts *= 0.94
-
-
-                # rot = np.array( [ 0, -1,  0, 1,  0,  0,0,  0,  1])
-                # rot = np.reshape(rot,(3,3))
-                rot = global_rot[f,:,:]
-                pts =  np.matmul( rot, pts)  # (3,3)  x (11510,3) =>(3,11510)
-
-                v_face_allFrames[f,:,:] = pts.transpose()
-        else:   #Rotate 180 degrees to flip y axis
-            #global_rot =  batch_rodrigues(np.swapaxes(faceParam['rot'],0,1)) #input (Nx3), output: (N,3,3)
-
-            #global_rot *( v_face_allFrames - rot_pivot)
-            for f in range(v_face_allFrames.shape[0]):
-
-                pts = np.swapaxes(v_face_allFrames[f,:,:],0,1) # (3,11510)
-
-                #rot = np.array( [ 1, 0, 0,  0, 1,  0,  0, 0, -1])
-                #rot = np.array( [ 1, 0, 0,  0, 1,  0,  0, 0, -1])
-                rot = np.array( [ 0, -1, 0,  1,  0,  0, 0, 0, 1])
-                #rot = np.array( [ 0, 1, 0,  1,  0,  0, 0, 0, 1])
-                rot = np.reshape(rot,(3,3))
-                #rot = global_rot[f,:,:]
-                pts =  np.matmul( rot, pts)  # (3,3)  x (11510,3) =>(3,11510)
-                pts =  np.matmul( rot, pts)  # (3,3)  x (11510,3) =>(3,11510)
-
-                #trans = np.array([[0.0,-1.5,0.2]])
-                trans = np.array([[0.0,-1,0.2]])
-                v_face_allFrames[f,:,:] = pts.transpose() +trans
-
-
-        if bApplyTrans:
-            trans = np.swapaxes(faceParam['trans'],0,1) #(frames,3)
-            trans = np.expand_dims(trans,1)  #(frames,1, 3)
-            v_face_allFrames = v_face_allFrames + trans     # (frames, 11510, 3)
-
-
-            faceMassCenter += faceParam['trans'] #(3, frames)
-
-
-        if bComputeNormal==False:
-            #Debug. no normal
-            faceMassCenter = v_face_allFrames[:,5885,:] #5885th vertex. around the head top.
-            MoshParam = {'ver': v_face_allFrames, 'normal': [], 'f': trifaces, 'centers': faceMassCenter}  # support rendering two models together
-            MoshParam_list.append(MoshParam)
-            continue
-
-
-        # # CPU version
-        start = time.time()
-        vertex_normals = ComputeNormal(v_face_allFrames, trifaces)
-        print("CPU: normal computing time: {}".format( time.time() - start))
-
-        # GPU version
-        # start = time.time()
-        # vertex_normals = ComputeNormal_gpu(v_face_allFrames, trifaces)
-        # print("GPU: normal computing time: {}".format( time.time() - start))
-
-
-        faceMassCenter = v_face_allFrames[:,5885,:] #5885th vertex. around the head top.
-        #faceMassCenter = np.swapaxes(faceMassCenter,0,1) # (3,frames) - >(frames,3)
-
-        MoshParam = {'ver': v_face_allFrames, 'normal': vertex_normals, 'f': trifaces, 'centers': faceMassCenter}  # support rendering two models together
-        MoshParam_list.append(MoshParam)
-
-    return MoshParam_list
-
-
-
-#####################################################
-### Haggling video rendering/generation
-
-def LoadHagglingDataKeypoints(fileName):
-    global g_hagglingSeqName
-    g_hagglingSeqName = fileName[:-4]
-    ##read face
-    seqPath = '/ssd/codes/pytorch_motionSynth/motionsynth_data/data/processed_panoptic/panopticDB_face_pkl_hagglingProcessed/' +fileName
-    motionData = pickle.load( open( seqPath, "rb" ) , encoding='latin1')
-    if 'subjects' in motionData.keys() and len(motionData['subjects'])==3:
-        setFace([motionData['subjects'][0]['face70'], motionData['subjects'][1]['face70'], motionData['subjects'][2]['face70']])
-    else:
-        setFace(None)
-
-
-    ##read hand
-    seqPath = '/ssd/codes/pytorch_motionSynth/motionsynth_data/data/processed_panoptic/panopticDB_hand_pkl_hagglingProcessed/' +fileName
-    motionData = pickle.load( open( seqPath, "rb" ) , encoding='latin1')
-    if 'hand_left' in motionData:
-        if len(motionData['hand_left'])==3:
-            setHand_left([motionData['hand_left'][0]['hand21'], motionData['hand_left'][1]['hand21'], motionData['hand_left'][2]['hand21']])
-        else:
-            setHand_left(None)
-
-
-    if 'hand_right' in motionData:
-        if len(motionData['hand_right'])==3:
-            setHand_right([motionData['hand_right'][0]['hand21'], motionData['hand_right'][1]['hand21'], motionData['hand_right'][2]['hand21']])
-        else:
-            setHand_right(None)
-
-    #read speech
-    seqPath = '/ssd/codes/haggling_audio/panopticDB_pkl_speech_hagglingProcessed/' +fileName
-    motionData = pickle.load( open( seqPath, "rb" ) , encoding='latin1')
-    setSpeech([motionData['speechData'][0], motionData['speechData'][1], motionData['speechData'][2]])
-
-    #read body
-    seqPath = '/ssd/codes/pytorch_motionSynth/motionsynth_data/data/processed_panoptic/panopticDB_pkl_hagglingProcessed/' +fileName
-    motionData = pickle.load( open( seqPath, "rb" ) , encoding='latin1')
-    setSkeleton([motionData['subjects'][0]['joints19'], motionData['subjects'][1]['joints19'], motionData['subjects'][2]['joints19']])
-
-    #Visualize Body Normal
-    setBodyNormal([motionData['subjects'][0]['bodyNormal'], motionData['subjects'][1]['bodyNormal'], motionData['subjects'][2]['bodyNormal']])
-    setFaceNormal([motionData['subjects'][0]['faceNormal'], motionData['subjects'][1]['faceNormal'], motionData['subjects'][2]['faceNormal']])
-
-
-g_adamWrapper = None
-def LoadHagglingData(fileName):
-    global g_hagglingSeqName
-    g_hagglingSeqName = fileName[:-4]
-
-    bLoadFace = False
-    bLoadAdam = True
-    bLoadSkeleton = False
-    bLoadKeypoints = False
-
-
-    fileName_pkl = fileName.replace('npz','pkl')
-
-    if bLoadFace :
-        """Load Face data"""
-        global g_faceModel
-        if g_faceModel is None:
-            import scipy.io as sio
-            g_faceModel = sio.loadmat('/ssd/data/totalmodel/face_model_totalAligned.mat')
-
-        ##read face mesh parameter
-        seqPath = '/ssd/codes/pytorch_motionSynth/motionsynth_data/data/processed_panoptic/panopticDB_faceMesh_pkl_hagglingProcessed/' +fileName_pkl
-
-        faceData = pickle.load( open( seqPath, "rb" ) , encoding='latin1')
-
-        FaceParam_list = GetFaceMesh(g_faceModel,faceData['subjects'])
-        setMeshData( FaceParam_list)
-
-        # #read speech
-        # seqPath = '/ssd/codes/haggling_audio/panopticDB_pkl_speech_hagglingProcessed/' +fileName
-        # motionData = pickle.load( open( seqPath, "rb" ) )
-        # setSpeech([motionData['speechData'][0], motionData['speechData'][1], motionData['speechData'][2]])
-
-        #read speech
-        seqPath = '/ssd/codes/haggling_audio/panopticDB_pkl_speech_hagglingProcessed/' +fileName_pkl
-        motionData = pickle.load( open( seqPath, "rb" ) , encoding='latin1')
-        speechData = [motionData['speechData'][0], motionData['speechData'][1], motionData['speechData'][2]]
-        #setSpeech([motionData['speechData'][0], motionData['speechData'][1], motionData['speechData'][2]])
-        speech_rootData = [FaceParam_list[0]['centers'], FaceParam_list[1]['centers'], FaceParam_list[2]['centers']]
-        speech_rootData =np.multiply(speech_rootData, 100.0) #meter to cm
-        setSpeech_withRoot(speechData,speech_rootData)
-
-    if bLoadSkeleton:
-        """Load Skeleton data (Holden's format)"""
-
-        #Read body, holden's format
-        #fileName_npz = fileName.replace('pkl','npz')
-        X = np.load('/ssd/codes/pytorch_motionSynth/motionsynth_data/data/processed/panoptic_npz/' + fileName)['clips'] #(17944, 240, 73)
-        X = np.swapaxes(X, 1, 2).astype(np.float32) #(17944, 73, 240)
-        set_Holden_Data_73([ X[0,:,:], X[1,:,:], X[2,:,:] ], ignore_root=True)
-    if bLoadKeypoints:
-        LoadHagglingDataKeypoints(fileName_pkl)
-
-    if bLoadAdam:
-
-        from modelViewer.batch_adam import ADAM
-        global g_adamWrapper
-
-        """Load Adam data"""
-        if g_adamWrapper==None:
-            g_adamWrapper = ADAM()
-
-        fileName_pkl = fileName.replace('npz','pkl')
-
-        seqPath = '/ssd/codes/pytorch_motionSynth/motionsynth_data/data/processed_panoptic/panopticDB_adamMesh_pkl_hagglingProcessed_stage1/' +fileName_pkl
-        adamParam_all = pickle.load( open( seqPath, "rb" ) , encoding='latin1')
-
-         ##read face mesh parameter
-        seqPath = '/ssd/codes/pytorch_motionSynth/motionsynth_data/data/processed_panoptic/panopticDB_faceMesh_pkl_hagglingProcessed/' +fileName_pkl
-        faceData = pickle.load( open( seqPath, "rb" ) , encoding='latin1')
-
-        start = time.time()
-        meshes =[]
-        frameStart = 0
-        frameEnd = -1
-
-        #for faceParam in faceParam_selected:
-        for adamParam in adamParam_all['subjects']:
-
-            betas = np.swapaxes(adamParam['betas'],0,1)[frameStart:frameEnd]  #Frames  x30
-            faces = np.swapaxes(adamParam['faces'],0,1)[frameStart:frameEnd]  #Frames  200
-
-            for faceParam in faceData['subjects']:
-                if faceParam['humanId'] == adamParam['humanId']:
-                    faces = faceParam['face_exp']
-                    faces = np.swapaxes(faces,0,1)[frameStart:frameEnd]  #Frames  200
-
-                    break
-
-            pose = np.swapaxes(adamParam['pose'],0,1)[frameStart:frameEnd]  #Frames  186
-            trans = np.swapaxes(adamParam['trans'],0,1)[frameStart:frameEnd]  #Frames  x3
-            startTime = time.time()
-
-            #Align the length
-            frameNum = min([pose.shape[0], faces.shape[0], betas.shape[0], trans.shape[0]])
-            pose = pose[:frameNum]
-            faces = faces[:frameNum]
-            betas = betas[:frameNum]
-            trans = trans[:frameNum]
-
-
-            v , j = g_adamWrapper(betas,pose,faces) #v:(frameNum, 18540, 3), j: (frameNum, 62, 3)
-            print('time: {}'.format(time.time()-startTime))
-            v += np.expand_dims(trans, axis=1)  # no translation in their LBS. trans: (humanNumn,30) ->(humanNumn,1, 30)
-
-            v *=0.01
-
-            normals = ComputeNormal(v, g_adamWrapper.f)
-            meshes.append( {'ver': v, 'normal': normals, 'f': g_adamWrapper.f})  # support rendering two models together
-
-
-        setMeshData( meshes)
-
-
-    # global g_meshes,g_skeletons,g_speech
-    # global g_frameLimit
-
-    # g_frameLimit = min([l['ver'].shape[0] for l in g_meshes])
-    # tempMinFrame = g_skeletons.shape[2]
-    # g_frameLimit = min(g_frameLimit,tempMinFrame)
-
-    # tempMinFrame = min([l['indicator'].shape[0] for l in g_speech])
-    # tempMinFrame = min([l['root'].shape[0] for l in g_speech])
-
-    # g_frameLimit = max(X.shape[2],FaceParam_list[0]['ver'].shape[0])
-
-
-g_hagglingFileList = None
-g_hagglingFileListIdx = -1
-def LoadHagglingData_Caller():
-
-    global g_hagglingFileList,g_hagglingFileListIdx,g_frameIdx
-
-    if g_hagglingFileList==None: #If initial calling
-        #directory = '/ssd/codes/pytorch_motionSynth/motionsynth_data/data/processed_panoptic/panopticDB_faceMesh_pkl_hagglingProcessed/'
-        # directory = '/ssd/codes/pytorch_motionSynth/motionsynth_data/data/processed_panoptic/panopticDB_pkl_hagglingProcessed/'
-        #directory = '/ssd/codes/pytorch_motionSynth/motionsynth_data/data/processed_panoptic/panopticDB_adamMesh_pkl_hagglingProcessed/'
-        #g_hagglingFileList =  [f for f in sorted(list(os.listdir(directory))) if os.path.isfile(os.path.join(directory,f)) and f.endswith('.pkl')]
-
-        #directory = '/ssd/codes/haggling_audio/panopticDB_pkl_speech_hagglingProcessed/'
-        directory = '/ssd/codes/pytorch_motionSynth/motionsynth_data/data/processed/panoptic_npz/'
-        g_hagglingFileList =  [f for f in sorted(list(os.listdir(directory))) if os.path.isfile(os.path.join(directory,f)) and f.endswith('.npz')]
-
-        hagglingFileList_final = list()
-        for f in g_hagglingFileList:
-            seqName = f[:-4]
-            if not os.path.exists('/ssd/render_mesh/'+seqName):
-                hagglingFileList_final.append(f)
-
-        g_hagglingFileList = hagglingFileList_final
-
-
-        g_hagglingFileListIdx =-1
-
-
-    g_hagglingFileListIdx +=1
-    if g_hagglingFileListIdx>=len(g_hagglingFileList):
-        print("g_hagglingFileListIdx>=len(g_hagglingFileList)")
-        return False
-
-    fileName = g_hagglingFileList[g_hagglingFileListIdx]
-    print(fileName)
-    LoadHagglingData(fileName)
-    g_frameIdx =0
-
-    return True
-
 #Save all the frames, and exit opengl when all frames are saved
 def setSaveOnlyMode(mode):
     global g_bSaveOnlyMode
@@ -4434,10 +3736,6 @@ def setupRotationView():
 
 
 def DrawPyramid(camWidth,camHeight,camDepth,lineWith=1):
-
-	# glColorMaterial(GL_FRONT, GL_DIFFUSE);
-	# glEnable(GL_COLOR_MATERIAL);
-	# glColor4f(color.first.x,color.first.y,color.first.z,color.second);
 
     glLineWidth(lineWith)
 
@@ -4665,79 +3963,6 @@ def renderscene():
     # #print('Time: ', stop - start)
 
 
-# This is to generate AMT example
-# Set camera views, window size, and so on.
-# Rotate scene, save as image
-# Close glWindow
-# def init_gl_rotationRendering(bSaveToFile = False, bShowSkeleton= False):
-#     # Init_Haggling()
-#     # global width
-#     # global height
-#     # Setup for double-buffered display and depth testing
-#
-#     global g_Width,g_Height
-#     g_Width = 1000
-#     g_Height = 1000
-#
-#     global g_viewMode, g_bShowBackground
-#     g_viewMode = 'free' #'camView'
-#     g_bShowBackground = False
-#
-#     # keyboard('R',0,0)
-#     global g_bRotateView, g_rotateView_counter
-#     g_bRotateView = True
-#     g_rotateView_counter =0
-#     global g_bSaveToFile, g_bShowSkeleton
-#     g_bSaveToFile = bSaveToFile
-#
-#
-#     # g_bShowSkeleton = False
-#     g_bShowSkeleton = bShowSkeleton
-#
-#     global g_stopMainLoop
-#     g_stopMainLoop=False
-#
-#
-#     init_gl_util()
-#     #Setup for rendering
-#     keyboard('c',0,0)
-#
-#
-#
-#
-#     setupRotationView()
-#
-#
-#     burningCnt =5
-#     # while True:
-#     while g_rotateView_counter*g_rotateInterval<360:
-#         glutPostRedisplay()
-#         if bool(glutMainLoopEvent)==False:
-#             continue
-#         glutMainLoopEvent()
-#         if g_stopMainLoop:
-#             break
-#
-#         if burningCnt>=0:
-#             # keyboard('c',0,0)
-#             g_rotateView_counter =0
-#             burningCnt -=1
-#     # print("Escaped glut loop")
-#
-#     #Generate video from png
-#     # import subprocess
-#
-#     # cmd = "cd /home/hjoo/temp/render_general; ffmpeg -r 30 -f image2 -i scene_%08d.png -vcodec libx264 -crf 25  -pix_fmt yuv420p ../test1.mp4"
-#     # subprocess.call(cmd,shell=True)
-
-
-
-# def init_gl_MTC_cameraView(bSaveToFile = False):
-#     global g_Width,g_Height
-#     g_Width = 1920
-#     g_Height = 1080
-#     show_SMPL(bSaveToFile = False, bResetSaveImgCnt = True, mode = 'init')
-
 def show_SMPL_sideView(bSaveToFile = False, bResetSaveImgCnt=True, countImg = True, bReturnRendered= True):
     show_SMPL_cameraView(bSaveToFile, bResetSaveImgCnt, countImg, False)
 
@@ -4870,8 +4095,6 @@ def render_on_image(saveDir, saveFileName, inputImage, scaleFactor=1, is_showBac
     show_SMPL(bSaveToFile = True, bResetSaveImgCnt = False, countImg = True, mode = 'camera')
 
 
-
-
 #For easier use.
 #skel should be a skeleton in a single frame
 #Input: skel should be a vector (N,)
@@ -4890,7 +4113,6 @@ def setNearPlane(p):
 def show(maxIter=-10):
     init_gl(maxIter)
 
-
 if __name__ == '__main__':
 
     import cv2
@@ -4900,14 +4122,4 @@ if __name__ == '__main__':
     setBackgroundTexture(image)
 
     init_gl()
-    #See demos.py
-
-    #Ignore below
-    # demo_holden_data()
-    # demo_panoptic_data_haggling()
-    #demo_holdenFormat_panoptic()
-    # demo_panoptic_data_haggling_meshes()
-    #demo_panoptic_faceModel_pkl_haggling()     #Visualize faceWarehouse model, driven by loaded face motion data
-    # demo_panoptic_faceModel_pkl()
-    # demo_loadObjMesh()
-    #demo_panoptic_AdamModel_multiFrames()      Not implemented
+   

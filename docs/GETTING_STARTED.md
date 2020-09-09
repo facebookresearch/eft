@@ -83,3 +83,8 @@ python -m demo.visEFTFit_coco --cocoAnnotFile (your_coco_path)/annotations/perso
    - 'j': on/off for 3d skeleton
    - 'm': on/off for 3d mesh  
    - 'f': on/off for floor
+
+
+## License
+[CC-BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/legalcode). 
+See the [LICENSE](LICENSE) file. 

@@ -162,3 +162,7 @@ else: #Another alternative way using a funtion
 ```
     python -m demo.demo_mocap --vPath /your/path/video.mp4 --bUseSMPLX
 ```
+
+## License
+[CC-BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/legalcode). 
+See the [LICENSE](LICENSE) file. 

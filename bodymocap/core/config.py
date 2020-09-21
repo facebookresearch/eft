@@ -8,63 +8,29 @@ Things you need to change: *_ROOT that indicate the path to each dataset
 import os
 from os.path import join
 
-bIsDevfair = False
-if os.path.exists('/private/home/hjoo'):
-    bIsDevfair= True
-
-if bIsDevfair:
-  ROOT_FOLDER ='/private/home/hjoo/codes/bodymocap/'
-
-  H36M_ROOT = '/private/home/hjoo/data/h36m-fetch/human36m_10fps'
-  H36M_TEST_ROOT = '/private/home/hjoo/data/h36m-fetch/extracted'
-
-  LSP_ROOT = '/private/home/hjoo/data/lsp_dataset'
-  LSP_ORIGINAL_ROOT = '/private/home/hjoo/data/lsp_dataset_original'
-  LSPET_ROOT = '/private/home/hjoo/data/lspet_dataset/images_highres'
-  MPII_ROOT = '/private/home/hjoo/data/mpii'
-  COCO_ROOT = '/private/home/hjoo/data/coco'
-  COCO2017_ROOT = '/private/home/hjoo/data/coco2017'
-  COCO2017_SEMMAP_ROOT =''
-  OCHUMAN_ROOT = '/private/home/hjoo/data/ochuman'
-  MPI_INF_3DHP_ROOT = '/private/home/hjoo/data/mpi_inf_3dhp'
-  PW3D_ROOT = '/private/home/hjoo/data/3dpw/'
-  UPI_S1H_ROOT = ''
-
-  #Our New Dataset
-  POSETRACK_ROOT = '/private/home/hjoo/data/posetrack/images/train'
-  PENNACTION_ROOT = '/private/home//hjoo/data/pennaction/frames'
-  PANOPTICDB_ROOT = '/private/home//hjoo/data/panoptic_mtc/a4_release/hdImgs'
-  # PANOPTICDB_SEQ_ROOT = '/private/home/hjoo/data/panoptic-toolbox' #General sequence
-  PANOPTICDB_SEQ_ROOT = '/checkpoint/hjoo/panoptic-toolbox' #General sequence
-
-  EXEMPLAR_OUTPUT_ROOT = '/private/home/hjoo/spinOut/'
-
-  
-
-else:
-  ROOT_FOLDER ='./'   #/home/hjoo/codes/bodymocap/'
-  H36M_ROOT = '/run/media/hjoo/disk/data/h36m-fetch/human36m_10fps_smplcocoTotalcap26_wShape_img'   #my folder format
-  H36M_TEST_ROOT = '/run/media/hjoo/disk/data/h36m-fetch/extracted'         #spin folder format
-  LSP_ROOT = '/run/media/hjoo/disk/data/lsp_dataset'
-  LSP_ORIGINAL_ROOT = '/run/media/hjoo/disk/data/lsp_dataset_original'
-  LSPET_ROOT = '/run/media/hjoo/disk/data/lspet_dataset/images_highres'
-  MPII_ROOT = '/run/media/hjoo/disk/data/mpii_human_pose_v1'
-  COCO_ROOT = '/run/media/hjoo/disk/data/coco'
-  COCO2017_ROOT = '/run/media/hjoo/disk/data/coco2017'
-  COCO2017_SEMMAP_ROOT = '/run/media/hjoo/disk/data/coco2017/annotations/panoptic_train2017_semmap'
+ROOT_FOLDER ='./'   #/home/hjoo/codes/bodymocap/'
+H36M_ROOT = '/run/media/hjoo/disk/data/h36m-fetch/human36m_10fps_smplcocoTotalcap26_wShape_img'   #my folder format
+H36M_TEST_ROOT = '/run/media/hjoo/disk/data/h36m-fetch/extracted'         #spin folder format
+LSP_ROOT = '/run/media/hjoo/disk/data/lsp_dataset'
+LSP_ORIGINAL_ROOT = '/run/media/hjoo/disk/data/lsp_dataset_original'
+LSPET_ROOT = '/run/media/hjoo/disk/data/lspet_dataset/images_highres'
+MPII_ROOT = '/run/media/hjoo/disk/data/mpii_human_pose_v1'
+COCO_ROOT = '/run/media/hjoo/disk/data/coco'
+COCO2017_ROOT = '/run/media/hjoo/disk/data/coco2017'
+COCO2017_SEMMAP_ROOT = '/run/media/hjoo/disk/data/coco2017/annotations/panoptic_train2017_semmap'
 
 
-  OCHUMAN_ROOT = '/run/media/hjoo/disk/data/OCHuman'
-  MPI_INF_3DHP_ROOT = '/run/media/hjoo/disk/data/mpi_inf_3dhp'
-  PW3D_ROOT = '/run/media/hjoo/disk/data/3dpw/'
-  UPI_S1H_ROOT = ''
+OCHUMAN_ROOT = '/run/media/hjoo/disk/data/OCHuman'
+MPI_INF_3DHP_ROOT = '/run/media/hjoo/disk/data/mpi_inf_3dhp'
+PW3D_ROOT = '/run/media/hjoo/disk/data/3dpw/'
+UPI_S1H_ROOT = ''
 
-  POSETRACK_ROOT = '/run/media/hjoo/disk/data/posetrack/images'
-  PENNACTION_ROOT = '/run/media/hjoo/disk/data/Penn_Action/frames'
-  PANOPTICDB_ROOT = '/run/media/hjoo/disk/data/panoptic_mtc/a4_release/hdImgs'
-  PANOPTICDB_SEQ_ROOT = '/home/hjoo/data/panoptic-toolbox' #General sequence
+POSETRACK_ROOT = '/run/media/hjoo/disk/data/posetrack/images'
+PENNACTION_ROOT = '/run/media/hjoo/disk/data/Penn_Action/frames'
+PANOPTICDB_ROOT = '/run/media/hjoo/disk/data/panoptic_mtc/a4_release/hdImgs'
+PANOPTICDB_SEQ_ROOT = '/home/hjoo/data/panoptic-toolbox' #General sequence
 
-  EXEMPLAR_OUTPUT_ROOT = '/run/media/hjoo/disk/data/cvpr2020_eft_researchoutput/0_SPIN/0_exemplarOutputTest'
+EXEMPLAR_OUTPUT_ROOT = '/run/media/hjoo/disk/data/cvpr2020_eft_researchoutput/0_SPIN/0_exemplarOutputTest'
 
 # Output folder to save test/train npz files
 # DATASET_NPZ_PATH = ROOT_FOLDER+'data/dataset_extras'

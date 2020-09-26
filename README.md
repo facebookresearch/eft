@@ -13,6 +13,8 @@ This repository also contains the pre-trained 3D pose estimation model trained w
     <img src="https://github.com/jhugestar/jhugestar.github.io/blob/master/img/eft_bodymocap.gif" height="256">
 </p>
 
+## News: 
+- We have released [FrankMocap](https://github.com/facebookresearch/frankmocap) by which you can obtain both 3D body+hand outputs. The body module is the same as this repository's model. We encourage to use [FrankMocap](https://github.com/facebookresearch/frankmocap) for body pose estimation.
 
 ## Installing Requirements
 It is convenient and safe to use conda environment

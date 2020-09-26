@@ -1,7 +1,9 @@
-# Motion Capture Demo
-
 ## Note
+
 This pose estimation module is deprecated. We have released [FrankMocap](https://github.com/facebookresearch/frankmocap) by which you can obtain both 3D body, hand, and body+hand outputs. The body module is the same as this repository's model. We encourage to use [FrankMocap](https://github.com/facebookresearch/frankmocap) for body pose estimation.
+---
+
+# Motion Capture Demo
 
 We have released pre-trained 3D pose estimation models trained with our EFT dataset. Our pose estimation code is based on [SPIN](https://github.com/nkolot/SPIN) with modifications
 

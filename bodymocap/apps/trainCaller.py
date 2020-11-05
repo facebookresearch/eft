@@ -11,6 +11,12 @@ from bodymocap.datasets import BaseDataset
 Note: This function is not used anymore. Original code already has weakperspective projection
 """
 def trainerWrapper(params):
+    """
+    Returns a list of params.
+
+    Args:
+        params: (dict): write your description
+    """
     return
     # return
     # print("Trainer function is called")
@@ -25,6 +31,12 @@ def trainerWrapper(params):
 
 #This is the finally sub
 def trainerWrapper_original(params):
+    """
+    Trainer dataset.
+
+    Args:
+        params: (dict): write your description
+    """
     
     print("Trainer function is called")
     options = TrainOptions().parse_args(params)
@@ -36,6 +48,12 @@ def trainerWrapper_original(params):
     trainer.train(test_dataset_3dpw, test_dataset_3dpw_crop, test_dataset_h36m)
 
 def exemplarTrainerWrapper(params):
+    """
+    Parse command line options.
+
+    Args:
+        params: (todo): write your description
+    """
     
     print("Trainer function is called")
     options = TrainOptions().parse_args(params)
@@ -46,6 +64,12 @@ def exemplarTrainerWrapper(params):
 
 
 def eft3DPWTestWrapper(params):
+    """
+    Eft3.
+
+    Args:
+        params: (dict): write your description
+    """
     
     print("Trainer function is called")
     options = TrainOptions().parse_args(params)
@@ -57,6 +81,12 @@ def eft3DPWTestWrapper(params):
 
 
 def smplifyAllWrapper(params):
+    """
+    Smplify smplify parameters.
+
+    Args:
+        params: (dict): write your description
+    """
     
     print("Trainer function is called")
     options = TrainOptions().parse_args(params)
@@ -67,6 +97,12 @@ def smplifyAllWrapper(params):
 
 
 def exemplarTrainerWrapper_analysis(params):
+    """
+    Exemplar dataset.
+
+    Args:
+        params: (todo): write your description
+    """
     
     print("exemplarTrainerWrapper_analysisfunction is called")
     options = TrainOptions().parse_args(params)     

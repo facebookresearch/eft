@@ -18,6 +18,12 @@ from fairmocap.core import constants
 
 de_normalize_img =  Normalize(mean=[ -constants.IMG_NORM_MEAN[0]/constants.IMG_NORM_STD[0]    , -constants.IMG_NORM_MEAN[1]/constants.IMG_NORM_STD[1], -constants.IMG_NORM_MEAN[2]/constants.IMG_NORM_STD[2]], std=[1/constants.IMG_NORM_STD[0], 1/constants.IMG_NORM_STD[1], 1/constants.IMG_NORM_STD[2]])
 def denormImg(image_tensor):
+    """
+    DenormIm image. numpy.
+
+    Args:
+        image_tensor: (todo): write your description
+    """
     image_np = de_normalize_img(image_tensor).cpu().numpy()
     image_np = np.transpose( image_np , (1,2,0) )*255.0
     image_np =image_np[:,:,[2,1,0]] 
@@ -170,6 +176,15 @@ def getSMPLoutput_imgSpace(smpl, pred_output, bboxCenter, bboxScale, imgShape, b
     return smpl_output, smpl_output_bbox, smpl_output_imgspace
 
 def renderSMPLoutput(rootDir='/home/hjoo/temp/render_general',rendermode='overlaid',rendertype='mesh', imgname='render'):
+    """
+    Renders the specified in the specified directory.
+
+    Args:
+        rootDir: (str): write your description
+        rendermode: (str): write your description
+        rendertype: (str): write your description
+        imgname: (str): write your description
+    """
 
     if os.path.exists(rootDir)==False:
         os.mkdir(rootDir)
@@ -234,6 +249,12 @@ def renderSMPLoutput(rootDir='/home/hjoo/temp/render_general',rendermode='overla
 
 from tqdm import tqdm
 def renderSMPLoutput_merge(rootDir):
+    """
+    Render all the images in - place.
+
+    Args:
+        rootDir: (str): write your description
+    """
 
     if os.path.exists(rootDir)==False:
         os.mkdir(rootDir)

@@ -397,6 +397,15 @@ def flip_img(img):
 # (camScale*(vert) + camTras )  ==> normalized coordinate  (-1 ~ 1)
 # 112* ((camScale*(vert) + camTras )  + 1) == 112*camScale*vert +  112*camTrans + 112
 def convert_smpl_to_bbox(data3D, scale, trans, bAppTransFirst=False):
+    """
+    Convert a bounding box to a bounding box.
+
+    Args:
+        data3D: (todo): write your description
+        scale: (float): write your description
+        trans: (todo): write your description
+        bAppTransFirst: (todo): write your description
+    """
     hmrIntputSize_half = 224 *0.5
 
     if bAppTransFirst:      #Hand model
@@ -411,6 +420,16 @@ def convert_smpl_to_bbox(data3D, scale, trans, bAppTransFirst=False):
     return data3D
 
 def convert_bbox_to_oriIm(data3D, boxScale_o2n, bboxTopLeft, imgSizeW, imgSizeH):
+    """
+    Convert a bbox to a box.
+
+    Args:
+        data3D: (todo): write your description
+        boxScale_o2n: (todo): write your description
+        bboxTopLeft: (todo): write your description
+        imgSizeW: (int): write your description
+        imgSizeH: (int): write your description
+    """
     hmrIntputSize_half = 224 *0.5
 
     # if type(imgSize) is tuple:
@@ -426,6 +445,16 @@ def convert_bbox_to_oriIm(data3D, boxScale_o2n, bboxTopLeft, imgSizeW, imgSizeH)
 
 
 def convert_smpl_to_bbox_perspective(data3D, scale_ori, trans_ori, focalLeng, scaleFactor=1.0):
+    """
+    Convert a 2d image to a 2d image.
+
+    Args:
+        data3D: (todo): write your description
+        scale_ori: (todo): write your description
+        trans_ori: (todo): write your description
+        focalLeng: (todo): write your description
+        scaleFactor: (float): write your description
+    """
     hmrIntputSize_half = 224 *0.5
 
     scale = scale_ori* hmrIntputSize_half
@@ -463,6 +492,17 @@ def convert_smpl_to_bbox_perspective(data3D, scale_ori, trans_ori, focalLeng, sc
 
 
 def convert_bbox_to_oriIm_perspective(data3D, boxScale_o2n, bboxTopLeft, imgSizeW, imgSizeH, focalLeng):
+    """
+    Convert image tobbox
+
+    Args:
+        data3D: (array): write your description
+        boxScale_o2n: (bool): write your description
+        bboxTopLeft: (todo): write your description
+        imgSizeW: (int): write your description
+        imgSizeH: (int): write your description
+        focalLeng: (todo): write your description
+    """
     hmrIntputSize_half = 224 *0.5
 
     # if type(imgSize) is tuple:
@@ -501,6 +541,13 @@ def convert_bbox_to_oriIm_perspective(data3D, boxScale_o2n, bboxTopLeft, imgSize
 
 
 def anthro_crop_fromRaw(rawimage, bbox_XYXY):
+    """
+    Crops an image to the image
+
+    Args:
+        rawimage: (todo): write your description
+        bbox_XYXY: (todo): write your description
+    """
     bbox_w = bbox_XYXY[2] - bbox_XYXY[0]
     bbox_h = bbox_XYXY[3] - bbox_XYXY[1]
     bbox_size = max(bbox_w, bbox_h)     #take the max
@@ -512,6 +559,15 @@ def anthro_crop_fromRaw(rawimage, bbox_XYXY):
     return rawimage, pt_ul, pt_br
 
 def anthro_convert_smpl_to_bbox(data3D, scale, trans, bbox_max_size):
+    """
+    Convert a 2d image
+
+    Args:
+        data3D: (array): write your description
+        scale: (float): write your description
+        trans: (todo): write your description
+        bbox_max_size: (int): write your description
+    """
     hmrIntputSize_half = bbox_max_size *0.5
 
     data3D *= scale           #apply scaling
@@ -524,6 +580,16 @@ def anthro_convert_smpl_to_bbox(data3D, scale, trans, bbox_max_size):
 
 # def anthro_convert_bbox_to_oriIm(data3D, boxScale_o2n, bboxTopLeft, imgSizeW, imgSizeH):
 def anthro_convert_bbox_to_oriIm(pred_vert_vis, rawImg_w, rawImg_h, bbox_pt_ul, bbox_max_size):
+    """
+    Convert raw bbox to raw coordinates.
+
+    Args:
+        pred_vert_vis: (todo): write your description
+        rawImg_w: (todo): write your description
+        rawImg_h: (todo): write your description
+        bbox_pt_ul: (todo): write your description
+        bbox_max_size: (int): write your description
+    """
     pred_vert_vis[:,:2] +=  bbox_pt_ul - np.array((rawImg_w, rawImg_h))*0.5 +(bbox_max_size*0.5)  # + hmrIntputSize_half#+ hmrIntputSize_half 
     return pred_vert_vis
 

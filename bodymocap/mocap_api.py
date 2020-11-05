@@ -15,6 +15,18 @@ from renderer import viewer2D
 class BodyMocap:
 
     def __init__(self, regressor_checkpoint, smpl_dir, device = torch.device('cuda') , bUseSMPLX = False):
+        """
+        Initialize the device.
+
+        Args:
+            self: (todo): write your description
+            regressor_checkpoint: (todo): write your description
+            smpl_dir: (str): write your description
+            device: (todo): write your description
+            torch: (todo): write your description
+            device: (todo): write your description
+            bUseSMPLX: (todo): write your description
+        """
 
         self.device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 

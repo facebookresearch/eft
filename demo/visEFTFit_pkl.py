@@ -72,6 +72,12 @@ def getRenderer(ren_type='geo'):
 
 
 def visEFT_singleSubject(renderer):
+    """
+    Perform eft_single
+
+    Args:
+        renderer: (todo): write your description
+    """
     inputDir = args.fit_dir
     imgDir = args.img_dir
 
@@ -205,6 +211,12 @@ def visEFT_singleSubject(renderer):
  
 
 def visEFT_multiSubjects(renderer):
+    """
+    Perform multiple eFT model
+
+    Args:
+        renderer: (todo): write your description
+    """
     inputDir = args.fit_dir
     imgDir = args.img_dir
 

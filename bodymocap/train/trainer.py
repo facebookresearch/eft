@@ -43,6 +43,12 @@ g_timer = Timer()
 #     return skel3D_proj#skel3D_proj.view((skel3D.shape[0],-1))       #(N, 19*2) o
 
 def normalize_2dvector(gt_boneOri_leftLeg):
+    """
+    Normalizes the 2 vectors.
+
+    Args:
+        gt_boneOri_leftLeg: (todo): write your description
+    """
         gt_boneOri_leftLeg_norm =torch.norm(gt_boneOri_leftLeg,dim=1)          #(N)
         # gt_boneOri_leftLeg[:,0] = gt_boneOri_leftLeg[:,0]/gt_boneOri_leftLeg_norm
         # gt_boneOri_leftLeg[:,1] = gt_boneOri_leftLeg[:,1]/gt_boneOri_leftLeg_norm
@@ -53,6 +59,12 @@ def normalize_2dvector(gt_boneOri_leftLeg):
 class Trainer(BaseTrainer):
     
     def init_fn(self):
+        """
+        Initialize the device.
+
+        Args:
+            self: (todo): write your description
+        """
         self.train_ds = MixedDataset(self.options, ignore_3d=self.options.ignore_3d, is_train=True)
 
         self.model = hmr(config.SMPL_MEAN_PARAMS, pretrained=True).to(self.device)
@@ -112,6 +124,12 @@ class Trainer(BaseTrainer):
         self.de_normalize_img = Normalize(mean=[ -constants.IMG_NORM_MEAN[0]/constants.IMG_NORM_STD[0]    , -constants.IMG_NORM_MEAN[1]/constants.IMG_NORM_STD[1], -constants.IMG_NORM_MEAN[2]/constants.IMG_NORM_STD[2]], std=[1/constants.IMG_NORM_STD[0], 1/constants.IMG_NORM_STD[1], 1/constants.IMG_NORM_STD[2]])
 
     def finalize(self):
+        """
+        Finalizes the finalize.
+
+        Args:
+            self: (todo): write your description
+        """
         pass
         # self.fits_dict.save()
 
@@ -155,6 +173,17 @@ class Trainer(BaseTrainer):
             return torch.FloatTensor(1).fill_(0.).to(self.device)
 
     def smpl_losses(self, pred_rotmat, pred_betas, gt_pose, gt_betas, has_smpl):
+        """
+        Smpl_rotmatcher loss.
+
+        Args:
+            self: (todo): write your description
+            pred_rotmat: (todo): write your description
+            pred_betas: (array): write your description
+            gt_pose: (int): write your description
+            gt_betas: (todo): write your description
+            has_smpl: (todo): write your description
+        """
         pred_rotmat_valid = pred_rotmat[has_smpl == 1]
         gt_rotmat_valid = batch_rodrigues(gt_pose.view(-1,3)).view(-1, 24, 3, 3)[has_smpl == 1]
         pred_betas_valid = pred_betas[has_smpl == 1]
@@ -168,6 +197,13 @@ class Trainer(BaseTrainer):
         return loss_regr_pose, loss_regr_betas
 
     def train_step(self, input_batch):
+        """
+        Perform the model.
+
+        Args:
+            self: (todo): write your description
+            input_batch: (todo): write your description
+        """
         self.model.train()
         
         # Get data from the batch
@@ -580,6 +616,15 @@ class Trainer(BaseTrainer):
         return output, losses
 
     def train_summaries(self, input_batch, output, losses):
+        """
+        Train the model summary.
+
+        Args:
+            self: (todo): write your description
+            input_batch: (todo): write your description
+            output: (todo): write your description
+            losses: (dict): write your description
+        """
         images = input_batch['img']
         images = images * torch.tensor([0.229, 0.224, 0.225], device=images.device).reshape(1,3,1,1)
         images = images + torch.tensor([0.485, 0.456, 0.406], device=images.device).reshape(1,3,1,1)
@@ -596,6 +641,14 @@ class Trainer(BaseTrainer):
             self.summary_writer.add_scalar(loss_name, val, self.step_count)
     
     def test(self, dataset_test, datasetName):
+        """
+        Evaluate the model.
+
+        Args:
+            self: (todo): write your description
+            dataset_test: (todo): write your description
+            datasetName: (str): write your description
+        """
 
         self.model.eval()
 

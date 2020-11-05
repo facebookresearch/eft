@@ -6,6 +6,13 @@ import numpy as np
 # vertices: frames x meshVerNum x 3
 # trifaces: facePolygonNum x 3 = 22800 x 3
 def ComputeNormal(vertices, trifaces):
+    """
+    Computes the vertices of vertices.
+
+    Args:
+        vertices: (array): write your description
+        trifaces: (todo): write your description
+    """
 
     if vertices.shape[0] > 5000:
         print('ComputeNormal: Warning: too big to compute {0}'.format(vertices.shape) )
@@ -54,6 +61,13 @@ def ComputeNormal(vertices, trifaces):
 
 
 def ComputeNormal_gpu(vertices, trifaces):
+    """
+    Concatenute the face between vertices.
+
+    Args:
+        vertices: (array): write your description
+        trifaces: (list): write your description
+    """
     import torch
     import torch.nn.functional as F
 

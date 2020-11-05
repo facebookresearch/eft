@@ -8,6 +8,14 @@ from torch.utils.data.sampler import Sampler
 class RandomSampler(Sampler):
 
     def __init__(self, data_source, checkpoint):
+        """
+        Initialize data source.
+
+        Args:
+            self: (todo): write your description
+            data_source: (str): write your description
+            checkpoint: (dict): write your description
+        """
         self.data_source = data_source
         if checkpoint is not None and checkpoint['dataset_perm'] is not None:
             self.dataset_perm = checkpoint['dataset_perm']
@@ -17,14 +25,34 @@ class RandomSampler(Sampler):
             self.perm = torch.randperm(len(self.data_source)).tolist() 
 
     def __iter__(self):
+        """
+        Returns an iterator over the iterables.
+
+        Args:
+            self: (todo): write your description
+        """
         return iter(self.perm)
     
     def __len__(self):
+        """
+        Returns the length of the field
+
+        Args:
+            self: (todo): write your description
+        """
         return len(self.perm)
 
 class SequentialSampler(Sampler):
 
     def __init__(self, data_source, checkpoint):
+        """
+        Initialize data source.
+
+        Args:
+            self: (todo): write your description
+            data_source: (str): write your description
+            checkpoint: (dict): write your description
+        """
         self.data_source = data_source
         if checkpoint is not None and checkpoint['dataset_perm'] is not None:
             self.dataset_perm = checkpoint['dataset_perm']
@@ -34,9 +62,21 @@ class SequentialSampler(Sampler):
             self.perm = self.dataset_perm
 
     def __iter__(self):
+        """
+        Returns an iterator over the iterables.
+
+        Args:
+            self: (todo): write your description
+        """
         return iter(self.perm)
     
     def __len__(self):
+        """
+        Returns the length of the field
+
+        Args:
+            self: (todo): write your description
+        """
         return len(self.perm)
 
 class CheckpointDataLoader(DataLoader):
@@ -46,6 +86,21 @@ class CheckpointDataLoader(DataLoader):
     def __init__(self, dataset, checkpoint=None, batch_size=1,
                  shuffle=False, num_workers=0, pin_memory=False, drop_last=True,
                  timeout=0, worker_init_fn=None):
+        """
+        Initialize the worker.
+
+        Args:
+            self: (todo): write your description
+            dataset: (todo): write your description
+            checkpoint: (dict): write your description
+            batch_size: (int): write your description
+            shuffle: (bool): write your description
+            num_workers: (int): write your description
+            pin_memory: (str): write your description
+            drop_last: (todo): write your description
+            timeout: (int): write your description
+            worker_init_fn: (str): write your description
+        """
 
         if shuffle:
             sampler = RandomSampler(dataset, checkpoint)

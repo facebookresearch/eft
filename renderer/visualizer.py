@@ -31,6 +31,13 @@ class Visualizer(object):
         self,
         rendererType ='gui'          #nongui or gui
     ):
+        """
+        Creates the renderer.
+
+        Args:
+            self: (todo): write your description
+            rendererType: (str): write your description
+        """
         self.rendererType = rendererType
         if rendererType != "gui" and rendererType!= "nongui":
             print("Wrong rendererType: {rendererType}")

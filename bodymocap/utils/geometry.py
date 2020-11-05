@@ -54,6 +54,13 @@ def quat_to_rotmat(quat):
 
 
 def cross_product(u, v):
+    """
+    Cross product.
+
+    Args:
+        u: (array): write your description
+        v: (array): write your description
+    """
     batch = u.shape[0]
     i = u[:, 1] * v[:, 2] - u[:, 2] * v[:, 1]
     j = u[:, 2] * v[:, 0] - u[:, 0] * v[:, 2]
@@ -64,6 +71,12 @@ def cross_product(u, v):
     return out
 
 def normalize_vector(v):
+    """
+    Normalize a vector.
+
+    Args:
+        v: (array): write your description
+    """
     batch = v.shape[0]
     v_mag = torch.sqrt(v.pow(2).sum(1))  # batch
     v_mag = torch.max(v_mag, v.new([1e-8]))
@@ -241,6 +254,14 @@ def estimate_translation(S, joints_2d, focal_length=5000., img_size=224.):
 
 
 def weakProjection_gpu(skel3D, scale, trans2D ):
+    """
+    Convert a 2d array of a 2d array.
+
+    Args:
+        skel3D: (todo): write your description
+        scale: (float): write your description
+        trans2D: (todo): write your description
+    """
     # if len(skel3D.shape)==1:
     #     skel3D = np.reshape(skel3D, (-1,3))
 
@@ -255,6 +276,14 @@ def weakProjection_gpu(skel3D, scale, trans2D ):
 
 #(57) (1) (2)
 def weakProjection(skel3D, scale, trans2D ):
+    """
+    Return the projection matrix to scale
+
+    Args:
+        skel3D: (str): write your description
+        scale: (float): write your description
+        trans2D: (todo): write your description
+    """
 
     skel3D_proj = scale* skel3D[:,:2] + trans2D
 

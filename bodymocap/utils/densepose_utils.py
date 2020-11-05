@@ -8,6 +8,18 @@ class denseposeManager():
 
     def __init__(self, width=1600, height=1200, name='GL Renderer',
                  program_files=['renderer/shaders/simple140.fs', 'renderer/shaders/simple140.vs'], color_size=1, ms_rate=1):
+        """
+        Initialize the engine.
+
+        Args:
+            self: (todo): write your description
+            width: (int): write your description
+            height: (int): write your description
+            name: (str): write your description
+            program_files: (str): write your description
+            color_size: (int): write your description
+            ms_rate: (float): write your description
+        """
         
         
         self.densepose_info = self.loadDensepose_info()
@@ -69,6 +81,13 @@ class denseposeManager():
 
     #make sure you have: /yourpath/bodymocap/renderer/densepose_uv_data/UV_Processed.mat
     def loadDensepose_info(self, dp_data_path= 'renderer/densepose_uv_data/UV_Processed.mat'):
+        """
+        Loads dense dataset.
+
+        Args:
+            self: (todo): write your description
+            dp_data_path: (str): write your description
+        """
         
         #Load densepose data
         import scipy.io as sio
@@ -141,6 +160,15 @@ class denseposeManager():
     
     
     def IUV2VertexId( self, I_point , U_point, V_point):
+        """
+        Find the vertex between two vertex
+
+        Args:
+            self: (todo): write your description
+            I_point: (todo): write your description
+            U_point: (int): write your description
+            V_point: (int): write your description
+        """
         P = [ U_point , V_point , 0 ]
         VertexIndicesNow  = np.where( self.smpl_vertex_IUV[:,0] == int(I_point) )[0]
         IUV_sub = self.smpl_vertex_IUV[VertexIndicesNow]        #for selected part's uv only

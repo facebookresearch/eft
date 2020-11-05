@@ -73,6 +73,13 @@ def getRenderer(ren_type='geo'):
     return renderer
 
 def conv_3djoint_2djoint(smpl_joints_3d_vis, imgshape):
+    """
+    Converts 2d convolution 2d convolutional 2d convolution to 3d convolutional 2d convolutionoints
+
+    Args:
+        smpl_joints_3d_vis: (todo): write your description
+        imgshape: (int): write your description
+    """
 
     smpl_joints_2d_vis = smpl_joints_3d_vis[:,:2]       #3D is in camera comaera coordinate with origin on the image center
     smpl_joints_2d_vis[:,0] += imgshape[1]*0.5      #Offset to move the origin on the top left
@@ -82,6 +89,12 @@ def conv_3djoint_2djoint(smpl_joints_3d_vis, imgshape):
     
 
 def visEFT_singleSubject(renderer):
+    """
+    This function will be used to fit the eFT
+
+    Args:
+        renderer: (todo): write your description
+    """
 
     MAGNIFY_RATIO = 3           #onbbox only. To magnify the rendered image size 
 
@@ -292,6 +305,12 @@ def visEFT_singleSubject(renderer):
 
 
 def visEFT_multiSubjects(renderer):
+    """
+    Determine which computes multiple images.
+
+    Args:
+        renderer: (todo): write your description
+    """
 
     bStopForEachSample = args.waitforkeys      #if True, it will wait for any key pressed to move to the next sample
     bShowTurnTable = args.turntable

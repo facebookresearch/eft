@@ -9,6 +9,14 @@ import torch
 class CheckpointSaver():
     """Class that handles saving and loading checkpoints during training."""
     def __init__(self, save_dir, save_steps=1000):
+        """
+        Initialize the directory.
+
+        Args:
+            self: (todo): write your description
+            save_dir: (str): write your description
+            save_steps: (int): write your description
+        """
         self.save_dir = os.path.abspath(save_dir)
         self.save_steps = save_steps
         if not os.path.exists(self.save_dir):
@@ -46,6 +54,15 @@ class CheckpointSaver():
         return
 
     def load_checkpoint(self, models, optimizers, checkpoint_file=None):
+        """
+        Loads the checkpoint from disk.
+
+        Args:
+            self: (todo): write your description
+            models: (todo): write your description
+            optimizers: (todo): write your description
+            checkpoint_file: (str): write your description
+        """
         print('>>')
         print('>> Resumming Networking Training >>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 

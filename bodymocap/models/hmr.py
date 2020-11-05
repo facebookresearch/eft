@@ -16,6 +16,16 @@ class Bottleneck(nn.Module):
     expansion = 4
 
     def __init__(self, inplanes, planes, stride=1, downsample=None):
+        """
+        Initialize the convolutional layer.
+
+        Args:
+            self: (todo): write your description
+            inplanes: (todo): write your description
+            planes: (todo): write your description
+            stride: (int): write your description
+            downsample: (todo): write your description
+        """
         super(Bottleneck, self).__init__()
         self.conv1 = nn.Conv2d(inplanes, planes, kernel_size=1, bias=False)
         self.bn1 = nn.BatchNorm2d(planes)
@@ -29,6 +39,13 @@ class Bottleneck(nn.Module):
         self.stride = stride
 
     def forward(self, x):
+        """
+        Perform forward computation.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         residual = x
 
         out = self.conv1(x)
@@ -55,6 +72,15 @@ class HMR(nn.Module):
     """
 
     def __init__(self, block, layers, smpl_mean_params):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            block: (todo): write your description
+            layers: (list): write your description
+            smpl_mean_params: (dict): write your description
+        """
         self.inplanes = 64
         super(HMR, self).__init__()
         npose = 24 * 6
@@ -97,6 +123,16 @@ class HMR(nn.Module):
 
 
     def _make_layer(self, block, planes, blocks, stride=1):
+        """
+        Make a layer.
+
+        Args:
+            self: (todo): write your description
+            block: (todo): write your description
+            planes: (todo): write your description
+            blocks: (todo): write your description
+            stride: (int): write your description
+        """
         downsample = None
         if stride != 1 or self.inplanes != planes * block.expansion:
             downsample = nn.Sequential(
@@ -115,6 +151,17 @@ class HMR(nn.Module):
 
 
     def forward(self, x, init_pose=None, init_shape=None, init_cam=None, n_iter=3):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+            init_pose: (todo): write your description
+            init_shape: (int): write your description
+            init_cam: (todo): write your description
+            n_iter: (int): write your description
+        """
 
         batch_size = x.shape[0]
 

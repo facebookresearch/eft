@@ -46,6 +46,12 @@ from bodymocap.utils.pose_utils import reconstruction_error, reconstruction_erro
 
 class EFTFitter(Trainer):
     def init_fn(self):
+        """
+        Initialize the device.
+
+        Args:
+            self: (todo): write your description
+        """
         self.train_ds = MixedDataset(self.options, ignore_3d=self.options.ignore_3d, is_train=True)
 
         self.model = hmr(config.SMPL_MEAN_PARAMS, pretrained=True).to(self.device)
@@ -177,6 +183,12 @@ class EFTFitter(Trainer):
 
 
     def exemplerTrainingMode(self):
+        """
+        Exempler for each batch of the given batch.
+
+        Args:
+            self: (todo): write your description
+        """
 
         for module in self.model.modules():
             if type(module)==False:
@@ -199,6 +211,14 @@ class EFTFitter(Trainer):
     #Assumes a single sample in the batch, requiring batch norm disabled
     #Loss is a bit different from original HMR training
     def run_eft_step(self, input_batch, iterIdx=0):
+        """
+        Perform an eft step.
+
+        Args:
+            self: (todo): write your description
+            input_batch: (todo): write your description
+            iterIdx: (int): write your description
+        """
 
         self.model.train()
 
@@ -537,6 +557,13 @@ class EFTFitter(Trainer):
     #Assumes a single sample in the batch, requiring batch norm disabled
     #Loss is a bit different from original HMR training
     def run_eft_step_wHand(self, input_batch):
+        """
+        Perform step step.
+
+        Args:
+            self: (todo): write your description
+            input_batch: (todo): write your description
+        """
 
         self.model.train()
 
@@ -877,6 +904,13 @@ class EFTFitter(Trainer):
     #Assumes a single sample in the batch, requiring batch norm disabled
     #Loss is a bit different from original HMR training
     def run_smplify(self, input_batch):
+        """
+        Run the model
+
+        Args:
+            self: (todo): write your description
+            input_batch: (todo): write your description
+        """
 
         self.model.eval()
 
@@ -1015,6 +1049,15 @@ class EFTFitter(Trainer):
     #Run EFT
     #Save output as seperate pkl files
     def eftAllInDB(self, test_dataset_3dpw = None, test_dataset_h36m= None, bExportPKL = True):
+        """
+        Run eftbads.
+
+        Args:
+            self: (todo): write your description
+            test_dataset_3dpw: (todo): write your description
+            test_dataset_h36m: (todo): write your description
+            bExportPKL: (int): write your description
+        """
 
         if config.bIsDevfair:
             now = datetime.datetime.now()
@@ -1405,6 +1448,15 @@ class EFTFitter(Trainer):
     #Run EFT
     #Save output as seperate pkl files
     def eftAllInDB_3dpwtest(self, test_dataset_3dpw = None, test_dataset_h36m= None, bExportPKL = True):
+        """
+        EftAll state machine
+
+        Args:
+            self: (todo): write your description
+            test_dataset_3dpw: (todo): write your description
+            test_dataset_h36m: (todo): write your description
+            bExportPKL: (todo): write your description
+        """
 
         if config.bIsDevfair:
             now = datetime.datetime.now()
@@ -1648,6 +1700,15 @@ class EFTFitter(Trainer):
     #Run SMPLify
     #Save output as seperate pkl files
     def smplifyAllInDB(self, test_dataset_3dpw = None, test_dataset_h36m= None, bExportPKL = True):
+        """
+        Synchronize training dataset.
+
+        Args:
+            self: (todo): write your description
+            test_dataset_3dpw: (todo): write your description
+            test_dataset_h36m: (todo): write your description
+            bExportPKL: (str): write your description
+        """
 
         if config.bIsDevfair:
             now = datetime.datetime.now()

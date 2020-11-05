@@ -78,6 +78,15 @@ def reconstruction_error(S1, S2, reduction='mean'):
 
 
 def reconstruction_error_fromMesh(J_regressor_batch, joint_mapper_h36m, S1_vertices, S2_vertices):
+    """
+    R calculate the ols from the linear regression matrix.
+
+    Args:
+        J_regressor_batch: (todo): write your description
+        joint_mapper_h36m: (todo): write your description
+        S1_vertices: (todo): write your description
+        S2_vertices: (todo): write your description
+    """
     # joint_mapper_h36m = constants.H36M_TO_J17
 
     # Get 14 predicted joints from the mesh

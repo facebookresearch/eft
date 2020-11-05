@@ -19,6 +19,12 @@ class SMPL(_SMPL):
     """ Extension of the official SMPL implementation to support more joints """
 
     def __init__(self, *args, **kwargs):
+        """
+        Initialize joints.
+
+        Args:
+            self: (todo): write your description
+        """
         super(SMPL, self).__init__(*args, **kwargs)
         joints = [constants.JOINT_MAP[i] for i in constants.JOINT_NAMES]
         J_regressor_extra = np.load(config.JOINT_REGRESSOR_TRAIN_EXTRA)
@@ -26,6 +32,12 @@ class SMPL(_SMPL):
         self.joint_map = torch.tensor(joints, dtype=torch.long)
 
     def forward(self, *args, **kwargs):
+        """
+        R predict.
+
+        Args:
+            self: (todo): write your description
+        """
         kwargs['get_skin'] = True
         smpl_output = super(SMPL, self).forward(*args, **kwargs)
         extra_joints = vertices2joints(self.J_regressor_extra, smpl_output.vertices)        #Additional 9 joints #Check doc/J_regressor_extra.png
@@ -44,6 +56,12 @@ class SMPLX(_SMPLX):
     """ Extension of the official SMPL implementation to support more joints """
 
     def __init__(self, *args, **kwargs):
+        """
+        Initialize joints.
+
+        Args:
+            self: (todo): write your description
+        """
         kwargs['ext'] = 'pkl'       #We have pkl file
         super(SMPLX, self).__init__(*args, **kwargs)
         joints = [constants.JOINT_MAP[i] for i in constants.JOINT_NAMES]
@@ -52,6 +70,12 @@ class SMPLX(_SMPLX):
         self.joint_map = torch.tensor(joints, dtype=torch.long)
 
     def forward(self, *args, **kwargs):
+        """
+        R forward forward algorithm.
+
+        Args:
+            self: (todo): write your description
+        """
         kwargs['get_skin'] = True
 
         #if pose parameter is for SMPL with 21 joints (ignoring root)

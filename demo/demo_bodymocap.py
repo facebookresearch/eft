@@ -49,6 +49,11 @@ parser.add_argument('--single', action='store_true', help='Reconstruct only one 
 parser.add_argument('--skip', action='store_true', help='Skip there exist already processed outputs')
 
 def get_video_path(args):
+    """
+    Get video path
+
+    Args:
+    """
     if args.webcam:
         video_path = 0
     elif args.url:
@@ -79,6 +84,17 @@ def get_video_path(args):
 
 
 def RunMonomocap(args, video_path, visualizer, bboxdetector, bodymocap, device, renderOutRoot):
+    """
+    Runs the specified video.
+
+    Args:
+        video_path: (str): write your description
+        visualizer: (todo): write your description
+        bboxdetector: (todo): write your description
+        bodymocap: (todo): write your description
+        device: (todo): write your description
+        renderOutRoot: (todo): write your description
+    """
 
     #Set up output folders
     if renderOutRoot:

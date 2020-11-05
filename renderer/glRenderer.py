@@ -16,6 +16,18 @@ class glRenderer:
 
     def __init__(self, width=640, height=480, name='GL Renderer',
                  program_files=['renderer/shaders/simple140.fs', 'renderer/shaders/simple140.vs'], color_size=1, ms_rate=1):
+        """
+        Initialize the window
+
+        Args:
+            self: (todo): write your description
+            width: (int): write your description
+            height: (int): write your description
+            name: (str): write your description
+            program_files: (str): write your description
+            color_size: (int): write your description
+            ms_rate: (float): write your description
+        """
         self.width = width
         self.height = height
         self.name = name
@@ -109,6 +121,13 @@ class glRenderer:
         glutReshapeFunc(self.reshape)
     
     def initShaderProgram(self, program_files):
+        """
+        Initialize the program list.
+
+        Args:
+            self: (todo): write your description
+            program_files: (str): write your description
+        """
          # Init shader programs
         shader_list = []
         for program_file in program_files:
@@ -128,6 +147,14 @@ class glRenderer:
             glDeleteShader(shader)
 
     def reshape(self,width, height):
+        """
+        Reshape the screen.
+
+        Args:
+            self: (todo): write your description
+            width: (int): write your description
+            height: (int): write your description
+        """
 
         if self.bOffscreenMode ==False:     #Offscreen mode doesn't allow reshape
             self.width = width
@@ -138,6 +165,14 @@ class glRenderer:
         # glViewport(0, 0, 500,500)
 
     def setWindowSize(self,new_width, new_height):
+        """
+        Sets the width of the window.
+
+        Args:
+            self: (todo): write your description
+            new_width: (int): write your description
+            new_height: (int): write your description
+        """
 
         if new_width != self.width or  new_height!=self.height:
             self.width = new_width
@@ -166,6 +201,14 @@ class glRenderer:
 
        
     def setViewportSize(self,new_width, new_height):
+        """
+        Sets the widthportport
+
+        Args:
+            self: (todo): write your description
+            new_width: (int): write your description
+            new_height: (int): write your description
+        """
         if new_width != self.width or  new_height!=self.height:
             self.width = new_width
             self.height =new_height
@@ -173,6 +216,12 @@ class glRenderer:
         # print("{}, {}".format(self.width, self.height))
 
     def setCameraViewOrth(self):
+        """
+        Sets the maximum position for the inputed by default the inputed | <int >
+
+        Args:
+            self: (todo): write your description
+        """
 
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
@@ -198,6 +247,12 @@ class glRenderer:
 
     # Show the world in a camera cooridnate (defined by K)
     def setCameraView(self):
+        """
+        Set the view matrix
+
+        Args:
+            self: (todo): write your description
+        """
      
         invR = np.eye(3)
         invT = np.zeros((3, 1))
@@ -236,6 +291,12 @@ class glRenderer:
         glMultMatrixd(camMatrix.T)
 
     def setWorldCenterBySceneCenter(self):
+        """
+        Sets the mesh for the mesh
+
+        Args:
+            self: (todo): write your description
+        """
         self.m_meshCenter  =np.mean(self.vertex_data,axis=0)
 
         meshMin = np.min(self.vertex_data,axis=0)
@@ -253,9 +314,22 @@ class glRenderer:
         self.m_zoom = 120 * max(self.meshWidth,100)/100
 
     def setZoom(self, z):
+        """
+        Set the zoom level.
+
+        Args:
+            self: (todo): write your description
+            z: (todo): write your description
+        """
         self.m_zoom = z
 
     def setSideView(self):
+        """
+        Sets the view of the mesh
+
+        Args:
+            self: (todo): write your description
+        """
         
         if self.m_meshCenter is None:
             self.setWorldCenterBySceneCenter()
@@ -291,6 +365,12 @@ class glRenderer:
         self.m_yRotate = -elevationAng
 
     def setFree3DView(self):
+        """
+        Sets the current view for the view.
+
+        Args:
+            self: (todo): write your description
+        """
         if self.m_meshCenter is None:
             self.setWorldCenterBySceneCenter()
 
@@ -312,20 +392,54 @@ class glRenderer:
         
 
     def showBackground(self, bShow):
+        """
+        Enable / disable color.
+
+        Args:
+            self: (todo): write your description
+            bShow: (bool): write your description
+        """
         self.bShowBackground = bShow
 
     def setBackgroundTexture(self,img):
+        """
+        Sets the texture texture
+
+        Args:
+            self: (todo): write your description
+            img: (array): write your description
+        """
         self.data_texture = img
     
     
     # 3x3 intrinsic camera matrix
     def setCamView_K(self, K):
+        """
+        Set the k position of the k position
+
+        Args:
+            self: (todo): write your description
+            K: (todo): write your description
+        """
         self.camView_K = K
 
     def setOrthoCamera(self, bOrtho = True):
+        """
+        Sets the bitthoCamera of the values of this method.
+
+        Args:
+            self: (todo): write your description
+            bOrtho: (str): write your description
+        """
         self.bOrthoCam = bOrtho
 
     def drawBackgroundOrth(self):
+        """
+        Draw a texture
+
+        Args:
+            self: (todo): write your description
+        """
 
         if self.data_texture is None:
             return
@@ -387,6 +501,12 @@ class glRenderer:
         glDisable(GL_TEXTURE_2D)
         
     def drawBackgroundPersp(self):
+        """
+        Draws the texture as a 2d.
+
+        Args:
+            self: (todo): write your description
+        """
 
         if self.data_texture is None:
             return
@@ -456,6 +576,16 @@ class glRenderer:
 
 
     def mouseButton(self, button, state, x, y):
+        """
+        Perform button mouse button.
+
+        Args:
+            self: (todo): write your description
+            button: (todo): write your description
+            state: (todo): write your description
+            x: (todo): write your description
+            y: (todo): write your description
+        """
         # global self.m_action, self.m_xMousePtStart, self.m_yMousePtStart
         if (button==GLUT_LEFT_BUTTON):
             if (glutGetModifiers() == GLUT_ACTIVE_SHIFT):
@@ -470,6 +600,14 @@ class glRenderer:
         self.m_yMousePtStart = y
 
     def mouseMotion(self, x, y):
+        """
+        MouseMotion the mouse.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+            y: (todo): write your description
+        """
         # global self.m_zoom, self.m_xMousePtStart, self.m_yMousePtStart, self.m_xRotate, self.m_yRotate, self.m_zRotate, self.m_xTrans, self.m_zTrans
         if (self.m_action=="MOVE_EYE"):
             self.m_xRotate += x - self.m_xMousePtStart
@@ -491,10 +629,24 @@ class glRenderer:
         glutPostRedisplay()
 
     def set_viewpoint(self, projection, model_view):
+        """
+        Set the viewpoint to the model
+
+        Args:
+            self: (todo): write your description
+            projection: (todo): write your description
+            model_view: (todo): write your description
+        """
         self.projection_matrix = projection
         self.model_view_matrix = model_view
 
     def get_screen_color_fbgra(self):
+        """
+        Returns the color screen color screen color.
+
+        Args:
+            self: (todo): write your description
+        """
         glReadBuffer(GL_BACK)   #GL_BACK is Default in double buffering
         data = glReadPixels(0, 0, self.width, self.height, GL_RGBA, GL_FLOAT, outputType=None)
         rgb = data.reshape(self.height, self.width, -1)
@@ -504,6 +656,12 @@ class glRenderer:
         return rgb
     
     def get_screen_color_ibgr(self):
+        """
+        Return the color screen for the screen screen.
+
+        Args:
+            self: (todo): write your description
+        """
         glReadBuffer(GL_BACK)   #GL_BACK is Default in double buffering
         data = glReadPixels(0, 0, self.width, self.height, GL_RGBA, GL_FLOAT, outputType=None)
         rgb = data.reshape(self.height, self.width, -1)
@@ -523,6 +681,12 @@ class glRenderer:
         self.m_viewmode = viewmode
 
     def get_z_value(self):
+        """
+        Get z - width
+
+        Args:
+            self: (todo): write your description
+        """
         glReadBuffer(GL_BACK)   #GL_BACK is Default in double buffering
 
         data = glReadPixels(0, 0, self.width, self.height, GL_DEPTH_COMPONENT, GL_FLOAT, outputType=None)
@@ -532,6 +696,12 @@ class glRenderer:
         return z
     
     def drawFloor(self):
+        """
+        Draws the grid.
+
+        Args:
+            self: (todo): write your description
+        """
         glDisable(GL_LIGHTING)
 
         glPolygonMode(GL_FRONT, GL_FILL)
@@ -574,6 +744,15 @@ class glRenderer:
         
                 
     def set_mesh(self, input_vertices, input_faces, color=None):
+        """
+        Set mesh mesh
+
+        Args:
+            self: (todo): write your description
+            input_vertices: (array): write your description
+            input_faces: (str): write your description
+            color: (str): write your description
+        """
           
         #Compute normal
         if True:#bComputeNormal:
@@ -714,6 +893,12 @@ class glRenderer:
 
 
     def drawMesh(self):
+        """
+        Draw a 3d image
+
+        Args:
+            self: (todo): write your description
+        """
         # self.draw_init()
 
         glColor3f(1,1,0)
@@ -750,6 +935,12 @@ class glRenderer:
         glUseProgram(0)
 
     def display(self):
+        """
+        Displays the screen.
+
+        Args:
+            self: (todo): write your description
+        """
         # First we draw a scene.
         # Notice the result is stored in the texture buffer.
         # Then we return to the default frame buffer since we will display on the screen.
@@ -830,20 +1021,44 @@ class glRenderer:
         glutPostRedisplay()
 
     def offscreenMode(self, bTrue):
+        """
+        Toggle the window.
+
+        Args:
+            self: (todo): write your description
+            bTrue: (array): write your description
+        """
         self.bOffscreenMode = bTrue
 
     def show_once(self):
+        """
+        Show the event loop.
+
+        Args:
+            self: (todo): write your description
+        """
         # for i in [1,2,3,4,5]:
         glutPostRedisplay()
         glutMainLoopEvent()
 
 
     def show(self):
+        """
+        Show the main loop.
+
+        Args:
+            self: (todo): write your description
+        """
         glutMainLoop()
 
 
 # Just for an example
 def loadSMPL():
+    """
+    Loads the model from the given model.
+
+    Args:
+    """
     from modelViewer.batch_smpl import SMPL
 
     smplWrapper = SMPL("/home/hjoo/codes/glViewer/models/neutral_smpl_with_cocoplus_reg.pkl")

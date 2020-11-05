@@ -38,6 +38,12 @@ except ImportError:
 
 
 def Load_Yolo(device):
+    """
+    Loads a yolo model.
+
+    Args:
+        device: (str): write your description
+    """
    
     #Load Darknet    
     yolo_model_def= os.path.join(yolo_path, 'config/yolov3-tiny.cfg')
@@ -56,6 +62,16 @@ def Load_Yolo(device):
     return model
 
 def Yolo_detect(model, camInputFrame, img_size = 416, conf_thres = 0.8, nms_thres = 0.4):
+    """
+    Detections.
+
+    Args:
+        model: (todo): write your description
+        camInputFrame: (str): write your description
+        img_size: (int): write your description
+        conf_thres: (todo): write your description
+        nms_thres: (todo): write your description
+    """
     
     img = transforms.ToTensor()(Image.fromarray(camInputFrame))
     # Pad to square resolution
@@ -77,6 +93,13 @@ def Yolo_detect(model, camInputFrame, img_size = 416, conf_thres = 0.8, nms_thre
     return detections
 
 def Yolo_detectHuman(model, camInputFrame):
+    """
+    Evaluate yolo model
+
+    Args:
+        model: (todo): write your description
+        camInputFrame: (todo): write your description
+    """
     
     detections = Yolo_detect(model,camInputFrame, conf_thres = 0.1, nms_thres = 0.3) #Modified to be better with yolo tiny
 
@@ -95,6 +118,20 @@ def Yolo_detectHuman(model, camInputFrame):
 #Code from https://github.com/Daniil-Osokin/lightweight-human-pose-estimation.pytorch/demo.py
 def infer_fast(net, img, net_input_height_size, stride, upsample_ratio, cpu,
                pad_value=(0, 0, 0), img_mean=(128, 128, 128), img_scale=1/256):
+    """
+    Infer a convolution.
+
+    Args:
+        net: (todo): write your description
+        img: (array): write your description
+        net_input_height_size: (int): write your description
+        stride: (int): write your description
+        upsample_ratio: (int): write your description
+        cpu: (todo): write your description
+        pad_value: (todo): write your description
+        img_mean: (todo): write your description
+        img_scale: (float): write your description
+    """
     height, width, _ = img.shape
     scale = net_input_height_size / height
 
@@ -121,6 +158,17 @@ def infer_fast(net, img, net_input_height_size, stride, upsample_ratio, cpu,
 
 #Code from https://github.com/Daniil-Osokin/lightweight-human-pose-estimation.pytorch/demo.py
 def pose2d_detectHuman(net, img, height_size =256, track = 1, smooth=1, bVis =True):
+    """
+    Pose2d_detectHuman on2d image.
+
+    Args:
+        net: (todo): write your description
+        img: (array): write your description
+        height_size: (int): write your description
+        track: (bool): write your description
+        smooth: (todo): write your description
+        bVis: (todo): write your description
+    """
 
     stride = 8
     upsample_ratio = 4

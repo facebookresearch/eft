@@ -16,6 +16,13 @@ from OpenGL.GL import *
 # Function that creates and compiles shaders according to the given type (a GL enum value) and
 # shader program (a file containing a GLSL program).
 def loadShader(shaderType, shaderFile):
+    """
+    Loads a shader
+
+    Args:
+        shaderType: (str): write your description
+        shaderFile: (str): write your description
+    """
     # check if file exists, get full path name
     strFilename = findFileOrThrow(shaderFile)
     shaderData = None
@@ -51,6 +58,12 @@ def loadShader(shaderType, shaderFile):
 
 # Function that accepts a list of shaders, compiles them, and returns a handle to the compiled program
 def createProgram(shaderList):
+    """
+    Create a program.
+
+    Args:
+        shaderList: (str): write your description
+    """
     program = glCreateProgram()
 
     for shader in shaderList:
@@ -74,6 +87,12 @@ def createProgram(shaderList):
 # Helper function to locate and open the target file (passed in as a string).
 # Returns the full path to the file as a string.
 def findFileOrThrow(strBasename):
+    """
+    Returns the file name of the given file.
+
+    Args:
+        strBasename: (str): write your description
+    """
     # Keep constant names in C-style convention, for readability
     # when comparing to C(/C++) code.
     if os.path.isfile(strBasename):

@@ -27,6 +27,18 @@ class meshRenderer(glRenderer):
                 # program_files=['renderer/shaders/geo140.fs', 'renderer/shaders/geo140.vs'],
                 render_mode ="normal",  #color, geo, normal
                 color_size=1, ms_rate=1):
+        """
+        Initialize the program.
+
+        Args:
+            self: (todo): write your description
+            width: (int): write your description
+            height: (int): write your description
+            name: (str): write your description
+            render_mode: (str): write your description
+            color_size: (int): write your description
+            ms_rate: (float): write your description
+        """
 
         self.render_mode = render_mode
         self.program_files ={}
@@ -48,6 +60,12 @@ class meshRenderer(glRenderer):
 
 
     def drawMesh(self):
+        """
+        Draws the mesh
+
+        Args:
+            self: (todo): write your description
+        """
 
         if self.vertex_dim is None:
             return

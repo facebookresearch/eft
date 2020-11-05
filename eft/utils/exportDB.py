@@ -12,6 +12,14 @@ from tqdm import tqdm
 import eft.cores.jointorders as jointorders
 
 def pklToJson(pklDir, outputPath, metainfo):
+    """
+    Convert pkl to json.
+
+    Args:
+        pklDir: (str): write your description
+        outputPath: (str): write your description
+        metainfo: (todo): write your description
+    """
 
     eft_fileList  = os.listdir(pklDir)       #Check all fitting files
     print(">> Found {} files in the fitting folder {}".format(len(eft_fileList), pklDir))

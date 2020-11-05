@@ -12,6 +12,14 @@ from bodymocap.core import constants
 class FitsDict():
     """ Dictionary keeping track of the best fit per image in the training set """
     def __init__(self, options, train_dataset):
+        """
+        Initialize the training dataset.
+
+        Args:
+            self: (todo): write your description
+            options: (dict): write your description
+            train_dataset: (todo): write your description
+        """
         self.options = options
         self.train_dataset = train_dataset
         self.fits_dict = {}

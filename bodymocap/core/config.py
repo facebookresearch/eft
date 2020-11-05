@@ -151,6 +151,13 @@ SMPL_MODEL_DIR = ROOT_FOLDER+'extradata/smpl/'
 
 
 def SetDBName(dbname, filename):
+    """
+    Sets the database name.
+
+    Args:
+        dbname: (str): write your description
+        filename: (str): write your description
+    """
     is_train = 1
     DATASET_FILES[is_train][dbname] = join(DATASET_NPZ_PATH, filename)
 

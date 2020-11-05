@@ -297,10 +297,24 @@ class SMPL(nn.Module):
                              to_tensor(to_np(data_struct.weights), dtype=dtype))
 
     def create_mean_pose(self, data_struct):
+        """
+        Create and : class : class : ~mean_mean_pose )
+
+        Args:
+            self: (todo): write your description
+            data_struct: (str): write your description
+        """
         pass
 
     @torch.no_grad()
     def reset_params(self, **params_dict):
+        """
+        Reset all parameters.
+
+        Args:
+            self: (todo): write your description
+            params_dict: (dict): write your description
+        """
         for param_name, param in self.named_parameters():
             if param_name in params_dict:
                 param[:] = torch.tensor(params_dict[param_name])
@@ -308,12 +322,30 @@ class SMPL(nn.Module):
                 param.fill_(0)
 
     def get_num_verts(self):
+        """
+        Returns the number of v_template points in the number.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.v_template.shape[0]
 
     def get_num_faces(self):
+        """
+        Return the number of faces in the mesh.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.faces.shape[0]
 
     def extra_repr(self):
+        """
+        Return a human - readable string.
+
+        Args:
+            self: (todo): write your description
+        """
         return 'Number of betas: {}'.format(self.NUM_BETAS)
 
     def forward(self, betas=None, body_pose=None, global_orient=None,
@@ -552,6 +584,14 @@ class SMPLH(SMPL):
         self.register_buffer('pose_mean', pose_mean_tensor)
 
     def create_mean_pose(self, data_struct, flat_hand_mean=False):
+        """
+        Creates a new mean function.
+
+        Args:
+            self: (todo): write your description
+            data_struct: (str): write your description
+            flat_hand_mean: (todo): write your description
+        """
         # Create the array for the mean pose. If flat_hand is false, then use
         # the mean that is given by the data, rather than the flat open hand
         global_orient_mean = torch.zeros([3], dtype=self.dtype)
@@ -564,6 +604,12 @@ class SMPLH(SMPL):
         return pose_mean
 
     def extra_repr(self):
+        """
+        Return a human - readable representation of this message.
+
+        Args:
+            self: (todo): write your description
+        """
         msg = super(SMPLH, self).extra_repr()
         if self.use_pca:
             msg += '\nNumber of PCA components: {}'.format(self.num_pca_comps)
@@ -793,6 +839,14 @@ class SMPLX(SMPLH):
             self.register_parameter('expression', expression_param)
 
     def create_mean_pose(self, data_struct, flat_hand_mean=False):
+        """
+        Creates a new mean function that creates a new structure.
+
+        Args:
+            self: (todo): write your description
+            data_struct: (str): write your description
+            flat_hand_mean: (todo): write your description
+        """
         # Create the array for the mean pose. If flat_hand is false, then use
         # the mean that is given by the data, rather than the flat open hand
         global_orient_mean = torch.zeros([3], dtype=self.dtype)
@@ -811,6 +865,12 @@ class SMPLX(SMPLH):
         return pose_mean
 
     def extra_repr(self):
+        """
+        Provides a human readable representation.
+
+        Args:
+            self: (todo): write your description
+        """
         msg = super(SMPLX, self).extra_repr()
         msg += '\nGender: {}'.format(self.gender.title())
         msg += '\nExpression Coefficients: {}'.format(

@@ -15,10 +15,22 @@ import eft.cores.jointorders as jointorders
 class SMPL(_SMPL):   
 
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the map.
+
+        Args:
+            self: (todo): write your description
+        """
         super(SMPL, self).__init__(*args, **kwargs)
         self.joint_map_smpl45_to_openpose19 = torch.tensor(jointorders.JOINT_MAP_SMPL45_TO_OPENPOSE18, dtype=torch.long)
 
     def forward(self, *args, **kwargs):
+        """
+        Parameters ---------- forward.
+
+        Args:
+            self: (todo): write your description
+        """
         kwargs['get_skin'] = True
         smpl_output = super(SMPL, self).forward(*args, **kwargs)
         reordered_joints = smpl_output.joints[:, self.joint_map_smpl45_to_openpose19, :]       #Reordering

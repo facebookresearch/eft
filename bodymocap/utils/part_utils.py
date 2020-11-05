@@ -12,6 +12,14 @@ class PartRenderer():
     Internally it uses the Neural 3D Mesh Renderer
     """
     def __init__(self, focal_length=5000., render_res=224):
+        """
+        Initialize the image.
+
+        Args:
+            self: (todo): write your description
+            focal_length: (int): write your description
+            render_res: (todo): write your description
+        """
         # Parameters for rendering
         self.focal_length = focal_length
         self.render_res = render_res

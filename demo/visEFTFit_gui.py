@@ -37,6 +37,14 @@ render_dirName = "visEFT"
 BBOX_IMG_RES = 224
 
 def getpath_level(imDir, imgFullPath,level=2):
+    """
+    Returns the path to the level of the given image
+
+    Args:
+        imDir: (str): write your description
+        imgFullPath: (str): write your description
+        level: (str): write your description
+    """
     imgName = os.path.basename(imgFullPath)
     # seqname = os.path.basename( os.path.dirname( os.path.dirname(imgFullPath)))
     
@@ -48,6 +56,15 @@ def getpath_level(imDir, imgFullPath,level=2):
     return os.path.join(imDir, imgName)
 
 def visEFT_singleSubject(inputDir, imDir, smplModelDir, bUseSMPLX):
+    """
+    Load a single model from a single directory.
+
+    Args:
+        inputDir: (str): write your description
+        imDir: (str): write your description
+        smplModelDir: (str): write your description
+        bUseSMPLX: (todo): write your description
+    """
     if bUseSMPLX:
         smpl = SMPLX(smplModelDir, batch_size=1, create_transl=False)
     else:
@@ -202,6 +219,14 @@ def visEFT_singleSubject(inputDir, imDir, smplModelDir, bUseSMPLX):
                 
  
 def save_mesh_obj(verts, faces, obj_mesh_name):
+    """
+    Save a mesh as a mesh file.
+
+    Args:
+        verts: (str): write your description
+        faces: (list): write your description
+        obj_mesh_name: (str): write your description
+    """
     with open(obj_mesh_name, "w") as fp:
         for v in verts:
             fp.write(f"v {v[0]:f} {v[1]:f} {v[2]:f}\n")
@@ -212,6 +237,15 @@ def save_mesh_obj(verts, faces, obj_mesh_name):
 
 
 def visEFT_multiSubjects(inputDir, imDir, smplModelDir, bUseSMPLX = False):
+    """
+    Finds multiple images inimage images.
+
+    Args:
+        inputDir: (str): write your description
+        imDir: (str): write your description
+        smplModelDir: (str): write your description
+        bUseSMPLX: (todo): write your description
+    """
 
     if bUseSMPLX:
         smpl = SMPLX(smplModelDir, batch_size=1, create_transl=False)

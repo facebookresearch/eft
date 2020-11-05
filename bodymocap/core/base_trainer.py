@@ -30,6 +30,13 @@ class BaseTrainer(object):
     Takes care of checkpointing/logging/resuming training.
     """
     def __init__(self, options):
+        """
+        Initialize the simulation.
+
+        Args:
+            self: (todo): write your description
+            options: (dict): write your description
+        """
         self.options = options
         self.endtime = time.time() + self.options.time_to_run
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -148,19 +155,53 @@ class BaseTrainer(object):
     
 
     def finalize(self):
+        """
+        Finalizes the finalize.
+
+        Args:
+            self: (todo): write your description
+        """
         pass
 
     # The following methods (with the possible exception of test) have to be implemented in the derived classes
     def init_fn(self):
+        """
+        Initialize the fn.
+
+        Args:
+            self: (todo): write your description
+        """
         raise NotImplementedError('You need to provide an _init_fn method')
 
     def train_step(self, input_batch):
+        """
+        Train a single step.
+
+        Args:
+            self: (todo): write your description
+            input_batch: (todo): write your description
+        """
         raise NotImplementedError('You need to provide a _train_step method')
 
     def train_summaries(self, input_batch):
+        """
+        Train the model.
+
+        Args:
+            self: (todo): write your description
+            input_batch: (todo): write your description
+        """
         raise NotImplementedError('You need to provide a _train_summaries method')
 
     def test(self, dataset_test, datasetName):
+        """
+        Returns the test test for the given dataset.
+
+        Args:
+            self: (todo): write your description
+            dataset_test: (todo): write your description
+            datasetName: (str): write your description
+        """
         return -1
 
     #    #Code for exemplar tuning
@@ -174,12 +215,24 @@ class BaseTrainer(object):
 
       #Code for exemplar tuning
     def backupModel(self):
+        """
+        Backup the model
+
+        Args:
+            self: (todo): write your description
+        """
         
         print(">>> Model status saved!")
         self.model_backup = copy.deepcopy(self.model.state_dict())
         self.optimizer_backup = copy.deepcopy(self.optimizer.state_dict())
 
     def reloadModel(self):
+        """
+        Reloads optimizer
+
+        Args:
+            self: (todo): write your description
+        """
         print(">>> Model status has been reloaded to initial!")
         # print(sum(sum(self.model.state_dict()['layer3.5.conv3.weight'])))
         # print("checking: {}".format(sum(sum(self.model_backup['layer3.5.conv3.weight']))))
@@ -188,6 +241,11 @@ class BaseTrainer(object):
 
 
     def exemplerTrainingMode():
+        """
+        Èi̇¥åıĸæį¢æīĸ¹
+
+        Args:
+        """
         assert False
 
     # def test(self):

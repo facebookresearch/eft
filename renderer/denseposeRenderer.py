@@ -21,6 +21,18 @@ class denseposeRenderer(glRenderer):
 
     def __init__(self, width=1600, height=1200, name='GL Renderer',
                  program_files=['renderer/shaders/simple140.fs', 'renderer/shaders/simple140.vs'], color_size=1, ms_rate=1):
+        """
+        Initialize dense.
+
+        Args:
+            self: (todo): write your description
+            width: (int): write your description
+            height: (int): write your description
+            name: (str): write your description
+            program_files: (str): write your description
+            color_size: (int): write your description
+            ms_rate: (float): write your description
+        """
         glRenderer.__init__(self, width, height, name, program_files, color_size, ms_rate)
 
         self.densepose_info = self.loadDensepose_info()
@@ -44,6 +56,13 @@ class denseposeRenderer(glRenderer):
 
     #make sure you have: /yourpath/renderer/densepose_uv_data/UV_Processed.mat
     def loadDensepose_info(self, dp_data_path= 'extradata/densepose_uv_data/UV_Processed.mat'):
+        """
+        Loads dense dataset.
+
+        Args:
+            self: (todo): write your description
+            dp_data_path: (str): write your description
+        """
         
         #Load densepose data
         import scipy.io as sio
@@ -81,6 +100,14 @@ class denseposeRenderer(glRenderer):
     #vertice: (6890,3)
     #colormode: ['seg', 'u', 'v']
     def set_mesh(self, vertices, _):
+        """
+        Set the mesh mesh
+
+        Args:
+            self: (todo): write your description
+            vertices: (array): write your description
+            _: (todo): write your description
+        """
         
         if vertices.dtype != np.dtype('float64'):
             vertices = vertices.astype(np.float64)      #Should be DOUBLE

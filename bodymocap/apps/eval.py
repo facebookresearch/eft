@@ -411,6 +411,12 @@ def run_evaluation(model, dataset_name, dataset, result_file,
     return -1       #Should return something
 
 def eval_main(params):
+    """
+    The main function.
+
+    Args:
+        params: (dict): write your description
+    """
     args = parser.parse_args(params)
 
     model = hmr(config.SMPL_MEAN_PARAMS)

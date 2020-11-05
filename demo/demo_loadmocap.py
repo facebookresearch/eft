@@ -22,6 +22,11 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--mocapdir', type=str, default=None, help='Folder of output images.')
 
 def get_video_path(args):
+    """
+    Get video path
+
+    Args:
+    """
     if args.webcam:
         video_path = 0
     elif args.url:
@@ -52,6 +57,14 @@ def get_video_path(args):
 
 
 def RunMonomocap(args, smpl, mocapDir, visualizer):
+    """
+    Run the mococ.
+
+    Args:
+        smpl: (todo): write your description
+        mocapDir: (str): write your description
+        visualizer: (todo): write your description
+    """
     fileNames = sorted(os.listdir(mocapDir))
 
     print(f"Loading mocap data from: {mocapDir}")

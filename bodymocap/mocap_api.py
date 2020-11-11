@@ -29,7 +29,7 @@ class BodyMocap:
 
         #Load pre-trained neural network 
         self.model_regressor = hmr(config.SMPL_MEAN_PARAMS).to(self.device)
-        checkpoint = torch.load(regressor_checkpoint)
+        checkpoint = torch.load(regressor_checkpoint, map_location=device)
         self.model_regressor.load_state_dict(checkpoint['model'], strict=False)
         self.model_regressor.eval()
 

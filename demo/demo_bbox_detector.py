@@ -130,7 +130,7 @@ def pose2d_detectHuman(net, img, height_size =256, track = 1, smooth=1, bVis =Tr
     if True:
     # for img in image_provider:
         orig_img = img.copy()
-        heatmaps, pafs, scale, pad = infer_fast(net, img, height_size, stride, upsample_ratio, cpu=0)
+        heatmaps, pafs, scale, pad = infer_fast(net, img, height_size, stride, upsample_ratio, cpu=not torch.cuda.is_available())
 
         total_keypoints_num = 0
         all_keypoints_by_type = []
@@ -178,7 +178,7 @@ def pose2d_detectHuman(net, img, height_size =256, track = 1, smooth=1, bVis =Tr
 
     return current_poses
 
-def Load_pose2d():
+def Load_pose2d(device):
     """
         This one runs in CPU
     """
@@ -186,7 +186,7 @@ def Load_pose2d():
     checkpoint = torch.load(pose2d_checkpoint, map_location='cpu')
     load_state(net, checkpoint)
     net = net.eval()
-    net = net.cuda()
+    net = net.to(device)
 
     return net
 
@@ -205,7 +205,7 @@ class BodyBboxDetector:
         elif method=="2dpose":
 
             print("Loading Pose Estimation Model...")
-            self.model = Load_pose2d()
+            self.model = Load_pose2d(device)
             print("Done")
         else :
             print("invalid method")

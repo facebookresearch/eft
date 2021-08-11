@@ -424,7 +424,7 @@ if __name__ == '__main__':
         visualizer = Visualizer('nongui')
     else:
         visualizer = Visualizer('gui')
-    bboxdetector =  BodyBboxDetector('2dpose')      #"yolo" or "2dpose"
+    bboxdetector =  BodyBboxDetector('2dpose', device = device)      #"yolo" or "2dpose"
     bodymocap = BodyMocap(args.checkpoint, config.SMPL_MODEL_DIR, device = device)
 
     RunMonomocap(args, video_path, visualizer, bboxdetector, bodymocap, device, renderOutRoot)

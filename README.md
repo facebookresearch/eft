@@ -1,6 +1,6 @@
 # [Exemplar Fine-Tuning for 3D Human Pose Fitting Towards In-the-Wild 3D Human Pose Estimation](https://arxiv.org/abs/2004.03686)
 
-This repository contains pseudo-GT 3D human pose data produced by [Exemplar Fine-Tuning (EFT)](https://arxiv.org/abs/2004.03686) method for in-the-wild 2D images. The 3D pose data is in the form of [SMPL](https://smpl.is.tue.mpg.de/) parameters, and this can be used as a supervision to train a 3D pose estimation algiritm (e.g., [SPIN](https://github.com/nkolot/SPIN) or [HMR](https://github.com/akanazawa/hmr)). 
+This repository contains pseudo-GT 3D human pose data produced by [Exemplar Fine-Tuning (EFT)](https://arxiv.org/abs/2004.03686) method, published in [3DV 2021](https://3dv2021.surrey.ac.uk/). The 3D pose data is in the form of [SMPL](https://smpl.is.tue.mpg.de/) parameters, and this can be used as a supervision to train a 3D pose estimation algiritm (e.g., [SPIN](https://github.com/nkolot/SPIN) or [HMR](https://github.com/akanazawa/hmr)). 
 We found that our EFT dataset is sufficient to build a model that is comparable to the previous SOTA algorithms without using any other indoor 3D pose dataset. See our [paper](https://arxiv.org/abs/2004.03686) for more details.
 <p>
     <img src="docs/example1.jpg" height="256">
@@ -77,10 +77,10 @@ sh scripts/download_eft.sh
 
 ## Citation
 ```
-@article{joo2020eft,
+@inproceedings{joo2020eft,
   title={Exemplar Fine-Tuning for 3D Human Pose Fitting Towards In-the-Wild 3D Human Pose Estimation},
   author={Joo, Hanbyul and Neverova, Natalia and Vedaldi, Andrea},
-  journal={arXiv preprint arXiv:2004.03686},
+  booktitle={3DV},
   year={2020}
 }
 ```

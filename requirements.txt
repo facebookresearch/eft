@@ -3,7 +3,7 @@ opencv-python
 torch
 torchvision
 PyOpenGL
-smplx
+smplx==0.1.28
 scipy
 tqdm
 git+https://github.com/mattloper/chumpy.git

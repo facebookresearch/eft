@@ -4,9 +4,9 @@
 - Run "demo/visEFTFit.py" 
 - set EFT fitting dir path and image path. 
 ```
-python -m demo.visEFTFit --rendermode geo --img_dir (your_img_dir) --fit_dir (downloaded_fitting_location)
+python -m demo.visEFTFit --rendermode geo --img_dir (your_img_dir) --fit_data (downloaded_fitting_location)
 #for example
-python -m demo.visEFTFit --rendermode geo --img_dir ~/data/coco/train2014 --fit_dir eft_fit/COCO2014-Part-ver01.json
+python -m demo.visEFTFit --rendermode geo --img_dir ~/data/coco/train2014 --fit_data eft_fit/COCO2014-Part-ver01.json
 ```
 
 - The rendered ouptut is written in default location "render_eft". You can change it with "--render_dir (outputFolderName)"

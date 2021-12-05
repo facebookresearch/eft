@@ -33,23 +33,31 @@ sh scripts/download_eft.sh
 ```
    - The EFT data will be saved in ./eft_fit/(DB_name).json. Each json file contains a version EFT fitting for a public dataset. 
    - See [Data Format](docs/README_dataformat.md) for details
-   - Currently available EFT fitting outputs (cvpr submit version):
+   - Currently available EFT fitting outputs:
 
 
-|Dataset Name   |  SampleNum | Version    | Manual Filtering |         File Name         |
-|---------------| -----------| ---------  | ---------------- |-------------------------- |
-|COCO2014-12kp  | 28K        | 0.1        | No               |  COCO2014-Part-ver01.json |
-|COCO2014-6kp   | 74K        | 0.1        | No               |  COCO2014-All-ver01.json  |
-|MPII           | 14K        | 0.1        | No               |  MPII_ver01.json          |
-|LSPet          | 7K         | 0.1        | No               |  LSPet_ver01.json         |
+|Dataset Name   |  SampleNum | Manual Filtering |         File Name         |
+|---------------| -----------| ---------------- |-------------------------- |
+|COCO2014-12kp  | 28344      | No               |  COCO2014-Part-ver01.json |
+|COCO2014-6kp   | 79051      | No               |  COCO2014-All-ver01.json  |
+|COCO2014-Val   | 10510      | Yes              |  COCO2014-Val-ver10.json  |
+|MPII           | 14361      | No               |  MPII_ver01.json          |
+|PoseTrack      | 28856      | No               |  PoseTrack_ver01.json     |
+|LSPet-Train    | 2946       | Yes              |  LSPet_ver01.json         |
+|LSPet-Test     | 2433       | Yes              |  LSPet_test_ver10.json    |
+|OCHuman-Train  | 2495       | Yes              |  OCHuman_train_ver10.json |
+|OCHuman-Test   | 1783       | Yes              |  OCHuman_test_ver10.json  |
+
 
   - COCO2014-All-ver01.json: [COCO](https://cocodataset.org/#home) 2014 training set by electing the samples 6 keypoints or more keypoints are annotated.
   - COCO2014-Part-ver01.json: [COCO](https://cocodataset.org/#home) 2014 training set by selecting the sample that 12 limb keypoints or more are annotated.
+  - COCO2014-Val-ver10.json: [COCO](https://cocodataset.org/#home) 2014 val set. 
   - MPII_ver01.json : [MPII](http://human-pose.mpi-inf.mpg.de/) Keypoint Dataset
-  - LSPet_ver01.json : [LSPet](https://sam.johnson.io/research/lspet.html) Dataset
-  - [PanopticStudio DB](http://domedb.perception.cs.cmu.edu/): TBA
-  - Note that the number of samples are fewer than the original sample numbers in each DB, since we automatically filtered out bad samples
-  - Manual Filtering: we plan to filter out erroneous results by manual annotations 
+  - PoseTrack_ver01.json : [PoseTrack](https://posetrack.net/) Dataset
+  - LSPet: [LSPet](https://sam.johnson.io/research/lspet.html) Dataset
+  - OCHuman : [OCHuman](https://github.com/liruilong940607/OCHumanApi) Dataset
+  - Note that the number of samples are fewer than the original sample numbers in each DB, since we automatically (or manually) filtered out bad samples
+  - Manual Filtering: Manual quality check and filtering is done to keep high quality results only. See paper for details
 
 ### Download Other Required Data
 - SMPL Model (Neutral model: basicModel_neutral_lbs_10_207_0_v1.0.0.pkl):

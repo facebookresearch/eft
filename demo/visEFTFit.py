@@ -20,6 +20,7 @@ from renderer import meshRenderer #screen less opengl renderer
 from renderer import glViewer #gui mode opengl renderer
 from renderer import denseposeRenderer #densepose renderer
 
+
 from tqdm import tqdm
 import argparse
 import json
@@ -33,6 +34,7 @@ parser.add_argument('--fit_data',default="eft_fit/MPII_ver01.json", type=str, he
 parser.add_argument('--smpl_dir',default="./extradata/smpl", type=str , help='Folder path where smpl pkl files exist')
 parser.add_argument('--onbbox',action="store_true", help="Show the 3D pose on bbox space")
 parser.add_argument('--rendermode',default="geo", help="Choose among geo, normal, densepose")
+parser.add_argument('--multi_bbox',default=True, help="If ture, show multi-bbox computed from mesh vertices")
 parser.add_argument('--render_dir',default="render_eft", help="Folder to save rendered images")
 parser.add_argument('--waitforkeys',action="store_true", help="If true, it will pasue after each visualizing each sample, waiting for any key pressed")
 parser.add_argument('--turntable',action="store_true", help="If true, show turn table views")
@@ -216,6 +218,24 @@ def visEFT_singleSubject(renderer):
             renderer.display()
             renderImg = renderer.get_screen_color_ibgr()
             viewer2D.ImShow(renderImg,waitTime=1)
+        
+        # Visualize multi-level cropped bbox
+        if args.multi_bbox:
+            from demo.multi_bbox_gen import multilvel_bbox_crop_gen
+            
+            bbox_list = multilvel_bbox_crop_gen(rawImg, pred_vert_vis, bbox_center, bbox_scale)
+
+            #Visualize BBox
+            for b_idx, b in enumerate(bbox_list):
+                # bbox_xyxy= conv_bboxinfo_centerscale_to_bboxXYXY(b['center'], b['scale'])
+                bbox_xyxy= b['bbox_xyxy']
+                if b_idx==0:
+                    img_multi_bbox = viewer2D.Vis_Bbox_minmaxPt(rawImg,  bbox_xyxy[:2], bbox_xyxy[2:] ,color=(0,255,0))
+                else:
+                    img_multi_bbox = viewer2D.Vis_Bbox_minmaxPt(rawImg,  bbox_xyxy[:2], bbox_xyxy[2:] ,color=(0,255,255))
+            viewer2D.ImShow(img_multi_bbox, name='multi_bbox', waitTime=1)
+            # for bbox in bbox_list:
+
 
         # Visualization Mesh on side view
         if True:

@@ -49,11 +49,11 @@ sh scripts/download_eft.sh
 |OCHuman-Test   | 1783       | Yes              |  OCHuman_test_ver10.json  |
 
 
-  - COCO2014-All-ver01.json: [COCO](https://cocodataset.org/#home) 2014 training set by electing the samples 6 keypoints or more keypoints are annotated.
+  - COCO2014-All-ver01.json: [COCO](https://cocodataset.org/#home) 2014 training set by selecting the samples 6 keypoints or more keypoints are annotated.
   - COCO2014-Part-ver01.json: [COCO](https://cocodataset.org/#home) 2014 training set by selecting the sample that 12 limb keypoints or more are annotated.
   - COCO2014-Val-ver10.json: [COCO](https://cocodataset.org/#home) 2014 val set. 
   - MPII_ver01.json : [MPII](http://human-pose.mpi-inf.mpg.de/) Keypoint Dataset
-  - PoseTrack_ver01.json : [PoseTrack](https://posetrack.net/) Dataset
+  - PoseTrack_ver01.json : [PoseTrack](https://posetrack.net/) Dataset by selecting the sample that 12 limb keypoints or more are annotated.
   - LSPet: [LSPet](https://sam.johnson.io/research/lspet.html) Dataset
   - OCHuman : [OCHuman](https://github.com/liruilong940607/OCHumanApi) Dataset
   - Note that the number of samples are fewer than the original sample numbers in each DB, since we automatically (or manually) filtered out bad samples

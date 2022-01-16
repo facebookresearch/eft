@@ -13,9 +13,9 @@ sh scripts/download_spin_data.sh
 ```
 You can see new files in "./extradata/spin/"
 
-- Download a preprocessed model file
+- Download preprocessed pose_regressor models
 ```
-sh scripts/download_regressor_model_best.sh
+sh scripts/download_model_zoo.sh
 ```
 
 - Set coco annotation and image files under eft_root/data/coco

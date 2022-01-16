@@ -1937,22 +1937,17 @@ class EFTFitter(Trainer):
 
     #Run SMPLify
     #Save output as seperate pkl files
-    def smplifyAllInDB(self, test_dataset_3dpw = None, test_dataset_h36m= None, bExportPKL = True):
+    def smplifyAllInDB(self, smplify_out_dir = "./smplify_out/", bExportPKL = True, test_dataset_3dpw = None, test_dataset_h36m= None):
+    # def smplifyAllInDB(self, bExportPKL = True, eft_out_dir, test_dataset_3dpw = None, test_dataset_h36m= None):
 
-        if config.bIsDevfair:
-            now = datetime.datetime.now()
-            # newName = '{:02d}-{:02d}-{}'.format(now.month, now.day, now.hour*3600 + now.minute*60 + now.second)
-            newName = '{:02d}-{:02d}'.format(now.month, now.day)
-            outputDir = newName + '_' + self.options.db_set + '_' + self.options.name
-        else:
-            now = datetime.datetime.now()
-            # outputDir = self.options.db_set
-            newName = 'test_{:02d}-{:02d}-{}'.format(now.month, now.day, now.hour*3600 + now.minute*60 + now.second)
-            outputDir = newName + '_' + self.options.db_set + '_' + self.options.name
+        now = datetime.datetime.now()
+        # outputDir = self.options.db_set
+        newName = 'smplify_{:02d}-{:02d}-{}'.format(now.month, now.day, now.hour*3600 + now.minute*60 + now.second)
+        outputDir = newName + '_' + self.options.db_set + '_' + self.options.name
 
-        exemplarOutputPath = os.path.join(config.EXEMPLAR_OUTPUT_ROOT , outputDir)
-        if not os.path.exists(exemplarOutputPath):
-            os.mkdir(exemplarOutputPath)
+        os.makedirs(smplify_out_dir,exist_ok=True)
+        exemplarOutputPath = os.path.join(smplify_out_dir , outputDir)
+        os.makedirs(exemplarOutputPath,exist_ok=True)
 
         """Training process."""
         # Run training for num_epochs epochs

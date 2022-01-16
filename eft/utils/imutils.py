@@ -10,7 +10,7 @@ import numpy as np
 import scipy.misc
 import cv2
 
-# from bodymocap.core import constants
+from eft.cores import constants
 from torchvision.transforms import Normalize
 
 def get_transform(center, scale, res, rot=0):
@@ -367,26 +367,26 @@ def flip_img(img):
     img = np.fliplr(img)
     return img
 
-# def flip_kp(kp):
-#     """Flip keypoints."""
-#     if len(kp) == 24:
-#         flipped_parts = constants.J24_FLIP_PERM
-#     elif len(kp) == 49:
-#         flipped_parts = constants.J49_FLIP_PERM
-#     kp = kp[flipped_parts]
-#     kp[:,0] = - kp[:,0]
-#     return kp
+def flip_kp(kp):
+    """Flip keypoints."""
+    if len(kp) == 24:
+        flipped_parts = constants.J24_FLIP_PERM
+    elif len(kp) == 49:
+        flipped_parts = constants.J49_FLIP_PERM
+    kp = kp[flipped_parts]
+    kp[:,0] = - kp[:,0]
+    return kp
 
-# def flip_pose(pose):
-#     """Flip pose.
-#     The flipping is based on SMPL parameters.
-#     """
-#     flipped_parts = constants.SMPL_POSE_FLIP_PERM
-#     pose = pose[flipped_parts]
-#     # we also negate the second and the third dimension of the axis-angle
-#     pose[1::3] = -pose[1::3]
-#     pose[2::3] = -pose[2::3]
-#     return pose
+def flip_pose(pose):
+    """Flip pose.
+    The flipping is based on SMPL parameters.
+    """
+    flipped_parts = constants.SMPL_POSE_FLIP_PERM
+    pose = pose[flipped_parts]
+    # we also negate the second and the third dimension of the axis-angle
+    pose[1::3] = -pose[1::3]
+    pose[2::3] = -pose[2::3]
+    return pose
 
 
 ## For converting coordinate between SMPL 3D coord <-> 2D bbox <-> original 2D image 
@@ -763,21 +763,21 @@ def process_image_bbox(img_original, bbox_XYWH, input_res=224):
 
 
 
-# g_de_normalize_img = Normalize(mean=[ -constants.IMG_NORM_MEAN[0]/constants.IMG_NORM_STD[0]    , -constants.IMG_NORM_MEAN[1]/constants.IMG_NORM_STD[1], -constants.IMG_NORM_MEAN[2]/constants.IMG_NORM_STD[2]], std=[1/constants.IMG_NORM_STD[0], 1/constants.IMG_NORM_STD[1], 1/constants.IMG_NORM_STD[2]])
-# def deNormalizeBatchImg(normTensorImg):
-#     """
-#     Normalized Batch Img to original image
-#     Input: 
-#         normImg: normTensorImg in cpu
-#     Input: 
-#         deNormImg: numpy form
-#     """
-#     deNormImg = g_de_normalize_img(normTensorImg).numpy()
-#     deNormImg = np.transpose(deNormImg , (1,2,0) )*255.0
-#     deNormImg = deNormImg[:,:,[2,1,0]] 
-#     deNormImg = np.ascontiguousarray(deNormImg, dtype=np.uint8)
+g_de_normalize_img = Normalize(mean=[ -constants.IMG_NORM_MEAN[0]/constants.IMG_NORM_STD[0]    , -constants.IMG_NORM_MEAN[1]/constants.IMG_NORM_STD[1], -constants.IMG_NORM_MEAN[2]/constants.IMG_NORM_STD[2]], std=[1/constants.IMG_NORM_STD[0], 1/constants.IMG_NORM_STD[1], 1/constants.IMG_NORM_STD[2]])
+def deNormalizeBatchImg(normTensorImg):
+    """
+    Normalized Batch Img to original image
+    Input: 
+        normImg: normTensorImg in cpu
+    Input: 
+        deNormImg: numpy form
+    """
+    deNormImg = g_de_normalize_img(normTensorImg).numpy()
+    deNormImg = np.transpose(deNormImg , (1,2,0) )*255.0
+    deNormImg = deNormImg[:,:,[2,1,0]] 
+    deNormImg = np.ascontiguousarray(deNormImg, dtype=np.uint8)
 
-#     return deNormImg
+    return deNormImg
 
 
 

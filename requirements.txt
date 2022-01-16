@@ -6,4 +6,7 @@ PyOpenGL
 smplx==0.1.28
 scipy
 tqdm
+torchgeometry
+tensorboard
+sklearn
 git+https://github.com/mattloper/chumpy.git

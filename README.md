@@ -63,6 +63,11 @@ sh scripts/download_eft.sh
 - SMPL Model (Neutral model: basicModel_neutral_lbs_10_207_0_v1.0.0.pkl):
     - Download in the original [website](http://smplify.is.tue.mpg.de/login). You need to register to download the SMPL data.
     - Put the file in: ./extradata/smpl/basicModel_neutral_lbs_10_207_0_v1.0.0.pkl
+    - Copy the smpl pkl file to a different name (SMPL_NEUTRAL.pkl). You need both files:
+    ```
+    cp ./extradata/smpl/basicModel_neutral_lbs_10_207_0_v1.0.0.pkl ./extradata/smpl/SMPL_NEUTRAL.pkl
+    ```
+
 
 - Densepose (optional, for Densepose rendering): 
   - Run the following script
@@ -77,11 +82,15 @@ sh scripts/download_eft.sh
  - [LSPet](https://sam.johnson.io/research/lspet.html): [Download Link](http://datasets.d2.mpi-inf.mpg.de/hr-lspet/hr-lspet.zip)
 
 ## Visualize EFT Fitting Results
-- See [GETTING_STARTED](docs/GETTING_STARTED.md)
+- See [README_eft_vis](README_eft_vis.md)
+
+
+## Run EFT Fitting by yourself
+- See [README_run_eft](README_run_eft.md)
 
 
 ## Motion Capture Demo
-- See [GETTING_bodymocap](README_bodymocap.md)
+- See [README_bodymocap](README_bodymocap.md)
 
 ## Citation
 ```

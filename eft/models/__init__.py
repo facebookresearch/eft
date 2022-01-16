@@ -1,3 +1,2 @@
-# Copyright (c) Facebook, Inc. and its affiliates.
-
-from .smpl import SMPL
+from .hmr import hmr
+from .smpl import SMPL#, SMPLX

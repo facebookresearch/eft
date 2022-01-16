@@ -1,17 +1,15 @@
-# Running EFT in you local machines
+# Running EFT in your machines
 
 Here, we show EFT fitting procedure by using COCO 2014 as example. 
-
 You may use other dataset similarly.
 
-We call the root folder of this repo as "."
 
 ## Additional Setting
 - Download extra data from [SPIN](https://github.com/nkolot/SPIN):
 ```
 sh scripts/download_spin_data.sh
 ```
-You can see new files in "./extradata/spin/"
+You can see the downloaded files in "./extradata/spin/"
 
 - Download preprocessed pose_regressor models
 ```
@@ -28,11 +26,11 @@ sh scripts/download_model_zoo.sh
 │        └── train2014           # the folder with image files
 └── ...
 ```
-Note that you may use symbolic links to setup this folder structure
+Note that you may use symbolic links to setup the folder structure
 
 
 ## Run preprocessing
-- This process convert the raw 2D annotation data into a unified format, saved in npz
+- This process converts the raw 2D annotation data into a unified format (in npz)
 - Run the following 
 ``` 
 python -m eft.db_processing.coco

@@ -92,6 +92,10 @@ sh scripts/download_eft.sh
 - See [README_run_eft](README_run_eft.md)
 
 
+## Model Zoo
+- We also share pre-trained models trained with diverse dataset. 
+- Plaese see "scripts/download_model_zoo.sh"
+
 ## Motion Capture Demo
 - See [README_bodymocap](README_bodymocap.md)
 

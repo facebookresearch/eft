@@ -10,7 +10,7 @@ import cv2
 import pickle
 import torch
 # from smplx import SMPL
-from eft.models import SMPL
+from eft.models import SMPL_19
 
 from eft.utils.imutils import crop, crop_bboxInfo
 from eft.utils.imutils import convert_smpl_to_bbox, convert_bbox_to_oriIm, conv_bboxinfo_bboxXYXY
@@ -95,7 +95,7 @@ def visEFT_singleSubject(renderer):
 
     #Load SMPL model
     smplModelPath = args.smpl_dir + '/basicModel_neutral_lbs_10_207_0_v1.0.0.pkl'
-    smpl = SMPL(smplModelPath, batch_size=1, create_transl=False)
+    smpl = SMPL_19(smplModelPath, batch_size=1, create_transl=False)
     
     #Load EFT fitting data
     print(f"Loading EFT data from {inputData}")

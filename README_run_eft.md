@@ -16,7 +16,7 @@ You can see the downloaded files in "./extradata/spin/"
 sh scripts/download_model_zoo.sh
 ```
 
-- Set coco annotation and image files under eft_root/data/coco
+- Set coco annotation and image files under ./data_sets/coco
 ```
 .
 ├── ...

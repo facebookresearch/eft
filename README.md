@@ -14,11 +14,7 @@ This repository also contains the pre-trained 3D pose estimation model trained w
 </p>
 
 ## News: 
-- We have released the EFT fitting codes. Please try it in eft_fit branch
-```
-git checkout eft_fit
-```
-See the new [readme](https://github.com/facebookresearch/eft/blob/eft_fit/README_run_eft.md) file: 
+- We have released the EFT fitting codes. See the [README_run_eft](https://github.com/facebookresearch/eft/blob/eft_fit/README_run_eft.md) file: 
 
 
 - We have released [FrankMocap](https://github.com/facebookresearch/frankmocap) by which you can obtain both 3D body+hand outputs. The body module is the same as this repository's model. We encourage to use [FrankMocap](https://github.com/facebookresearch/frankmocap) for body pose estimation.
